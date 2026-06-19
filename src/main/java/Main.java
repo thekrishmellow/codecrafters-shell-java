@@ -99,11 +99,28 @@ public class Main {
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
 
-            if (c == '\\' && !inSingleQuotes && !inDoubleQuotes) {
-                if (i + 1 < input.length()) {
-                    currentArg.append(input.charAt(i + 1));
-                    i++;
-                    inWord = true;
+            if (c == '\\' && !inSingleQuotes) {
+                if (inDoubleQuotes) {
+                    if (i + 1 < input.length()) {
+                        char next = input.charAt(i + 1);
+                        if (next == '\\' || next == '"' || next == '$' || next == '`') {
+                            currentArg.append(next);
+                            i++;
+                            inWord = true;
+                        } else {
+                            currentArg.append(c);
+                            inWord = true;
+                        }
+                    } else {
+                        currentArg.append(c);
+                        inWord = true;
+                    }
+                } else {
+                    if (i + 1 < input.length()) {
+                        currentArg.append(input.charAt(i + 1));
+                        i++;
+                        inWord = true;
+                    }
                 }
             } else if (c == '\'' && !inDoubleQuotes) {
                 inSingleQuotes = !inSingleQuotes;
