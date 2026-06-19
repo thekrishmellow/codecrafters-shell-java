@@ -20,13 +20,21 @@ public class Main {
                 break;
             } else if (input.equals("pwd")) {
                 System.out.println(System.getProperty("user.dir"));
+            } else if (input.startsWith("cd ")) {
+                String dirString = input.substring(3);
+                Path newDir = Path.of(dirString);
+                if (Files.isDirectory(newDir)) {
+                    System.setProperty("user.dir", newDir.toAbsolutePath().normalize().toString());
+                } else {
+                    System.out.println("cd: " + dirString + ": No such file or directory");
+                }
             } else if (input.startsWith("echo ")) {
                 System.out.println(input.substring(5));
             } else if (input.equals("echo")) {
                 System.out.println();
             } else if (input.startsWith("type ")) {
                 String cmd = input.substring(5);
-                if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type") || cmd.equals("pwd")) {
+                if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type") || cmd.equals("pwd") || cmd.equals("cd")) {
                     System.out.println(cmd + " is a shell builtin");
                 } else {
                     String pathStr = getExecutablePath(cmd);
@@ -43,6 +51,7 @@ public class Main {
                 if (pathStr != null) {
                     try {
                         ProcessBuilder pb = new ProcessBuilder(parts);
+                        pb.directory(new File(System.getProperty("user.dir")));
                         pb.inheritIO();
                         Process p = pb.start();
                         p.waitFor();
