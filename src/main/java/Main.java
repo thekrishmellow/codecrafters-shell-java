@@ -18,13 +18,15 @@ public class Main {
             String input = scanner.nextLine();
             if (input.equals("exit")) {
                 break;
+            } else if (input.equals("pwd")) {
+                System.out.println(System.getProperty("user.dir"));
             } else if (input.startsWith("echo ")) {
                 System.out.println(input.substring(5));
             } else if (input.equals("echo")) {
                 System.out.println();
             } else if (input.startsWith("type ")) {
                 String cmd = input.substring(5);
-                if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type")) {
+                if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type") || cmd.equals("pwd")) {
                     System.out.println(cmd + " is a shell builtin");
                 } else {
                     String pathStr = getExecutablePath(cmd);
