@@ -41,9 +41,15 @@ public class Main {
                 List<String> echoParts = parseArguments(input.substring(5));
                 String outPath = null;
                 boolean isErrorRedirect = false;
+                boolean isAppend = false;
                 for (int i = 0; i < echoParts.size(); i++) {
                     if (echoParts.get(i).equals(">") || echoParts.get(i).equals("1>")) {
                         if (i + 1 < echoParts.size()) outPath = echoParts.get(i + 1);
+                        echoParts.subList(i, echoParts.size()).clear();
+                        break;
+                    } else if (echoParts.get(i).equals(">>") || echoParts.get(i).equals("1>>")) {
+                        if (i + 1 < echoParts.size()) outPath = echoParts.get(i + 1);
+                        isAppend = true;
                         echoParts.subList(i, echoParts.size()).clear();
                         break;
                     } else if (echoParts.get(i).equals("2>")) {
@@ -55,7 +61,11 @@ public class Main {
                 }
                 String output = String.join(" ", echoParts);
                 if (outPath != null && !isErrorRedirect) {
-                    Files.writeString(Path.of(outPath), output + "\n");
+                    if (isAppend) {
+                        Files.writeString(Path.of(outPath), output + "\n", java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND);
+                    } else {
+                        Files.writeString(Path.of(outPath), output + "\n");
+                    }
                 } else if (outPath != null && isErrorRedirect) {
                     Files.writeString(Path.of(outPath), "");
                     System.out.println(output);
@@ -85,9 +95,15 @@ public class Main {
 
                 String outFile = null;
                 String errFile = null;
+                boolean isAppend = false;
                 for (int i = 0; i < parts.size(); i++) {
                     if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
                         if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    } else if (parts.get(i).equals(">>") || parts.get(i).equals("1>>")) {
+                        if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                        isAppend = true;
                         parts.subList(i, parts.size()).clear();
                         break;
                     } else if (parts.get(i).equals("2>")) {
@@ -104,7 +120,11 @@ public class Main {
                         ProcessBuilder pb = new ProcessBuilder(parts);
                         pb.directory(new File(System.getProperty("user.dir")));
                         if (outFile != null) {
-                            pb.redirectOutput(new File(outFile));
+                            if (isAppend) {
+                                pb.redirectOutput(ProcessBuilder.Redirect.appendTo(new File(outFile)));
+                            } else {
+                                pb.redirectOutput(new File(outFile));
+                            }
                             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
                         } else if (errFile != null) {
                             pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
