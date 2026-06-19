@@ -57,6 +57,12 @@ public class Main {
                         isErrorRedirect = true;
                         echoParts.subList(i, echoParts.size()).clear();
                         break;
+                    } else if (echoParts.get(i).equals("2>>")) {
+                        if (i + 1 < echoParts.size()) outPath = echoParts.get(i + 1);
+                        isErrorRedirect = true;
+                        isAppend = true;
+                        echoParts.subList(i, echoParts.size()).clear();
+                        break;
                     }
                 }
                 String output = String.join(" ", echoParts);
@@ -67,7 +73,11 @@ public class Main {
                         Files.writeString(Path.of(outPath), output + "\n");
                     }
                 } else if (outPath != null && isErrorRedirect) {
-                    Files.writeString(Path.of(outPath), "");
+                    if (isAppend) {
+                        Files.writeString(Path.of(outPath), "", java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND);
+                    } else {
+                        Files.writeString(Path.of(outPath), "");
+                    }
                     System.out.println(output);
                 } else {
                     System.out.println(output);
