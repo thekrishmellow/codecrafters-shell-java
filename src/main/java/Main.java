@@ -1,4 +1,7 @@
 import java.util.Scanner;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -24,11 +27,29 @@ public class Main {
                 if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type")) {
                     System.out.println(cmd + " is a shell builtin");
                 } else {
-                    System.out.println(cmd + ": not found");
+                    String pathStr = getExecutablePath(cmd);
+                    if (pathStr != null) {
+                        System.out.println(cmd + " is " + pathStr);
+                    } else {
+                        System.out.println(cmd + ": not found");
+                    }
                 }
             } else {
                 System.out.println(input + ": command not found");
             }
         }
+    }
+
+    private static String getExecutablePath(String command) {
+        String pathEnv = System.getenv("PATH");
+        if (pathEnv != null) {
+            for (String dir : pathEnv.split(File.pathSeparator)) {
+                Path path = Path.of(dir, command);
+                if (Files.isRegularFile(path) && Files.isExecutable(path)) {
+                    return path.toString();
+                }
+            }
+        }
+        return null;
     }
 }
