@@ -6,18 +6,21 @@ public class Main {
         // System.out.print("$ ");
         System.out.print("$ ");
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        System.out.println(input + ": command not found");
 
-         while (true) {
+        while (true) {
             System.out.print("$ ");
-            String inpu = scanner.nextLine();
-            if (inpu.equals("exit")) {
+            if (!scanner.hasNextLine()) {
                 break;
-            }else if (inpu.startsWith("echo ")) {
-                System.out.println(inpu.substring(5));
+            }
+            String input = scanner.nextLine();
+            if (input.equals("exit")) {
+                break;
+            } else if (input.startsWith("echo ")) {
+                System.out.println(input.substring(5));
+            } else if (input.equals("echo")) {
+                System.out.println();
             } else {
-                System.out.println(inpu + ": command not found");
+                System.out.println(input + ": command not found");
             }
         }
     }
