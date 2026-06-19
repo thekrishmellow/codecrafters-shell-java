@@ -12,6 +12,9 @@ public class Main {
          while (true) {
             System.out.print("$ ");
             String inpu = scanner.nextLine();
+            if (inpu.equals("exit")) {
+                break;
+            }
             System.out.println(inpu + ": command not found");
         }
     }
