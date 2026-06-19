@@ -39,17 +39,26 @@ public class Main {
                 }
             } else if (input.startsWith("echo ")) {
                 List<String> echoParts = parseArguments(input.substring(5));
-                String outFile = null;
+                String outPath = null;
+                boolean isErrorRedirect = false;
                 for (int i = 0; i < echoParts.size(); i++) {
                     if (echoParts.get(i).equals(">") || echoParts.get(i).equals("1>")) {
-                        if (i + 1 < echoParts.size()) outFile = echoParts.get(i + 1);
+                        if (i + 1 < echoParts.size()) outPath = echoParts.get(i + 1);
+                        echoParts.subList(i, echoParts.size()).clear();
+                        break;
+                    } else if (echoParts.get(i).equals("2>")) {
+                        if (i + 1 < echoParts.size()) outPath = echoParts.get(i + 1);
+                        isErrorRedirect = true;
                         echoParts.subList(i, echoParts.size()).clear();
                         break;
                     }
                 }
                 String output = String.join(" ", echoParts);
-                if (outFile != null) {
-                    Files.writeString(Path.of(outFile), output + "\n");
+                if (outPath != null && !isErrorRedirect) {
+                    Files.writeString(Path.of(outPath), output + "\n");
+                } else if (outPath != null && isErrorRedirect) {
+                    Files.writeString(Path.of(outPath), "");
+                    System.out.println(output);
                 } else {
                     System.out.println(output);
                 }
@@ -75,9 +84,14 @@ public class Main {
                 if (parts.isEmpty()) continue;
 
                 String outFile = null;
+                String errFile = null;
                 for (int i = 0; i < parts.size(); i++) {
                     if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
                         if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    } else if (parts.get(i).equals("2>")) {
+                        if (i + 1 < parts.size()) errFile = parts.get(i + 1);
                         parts.subList(i, parts.size()).clear();
                         break;
                     }
@@ -92,6 +106,9 @@ public class Main {
                         if (outFile != null) {
                             pb.redirectOutput(new File(outFile));
                             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                        } else if (errFile != null) {
+                            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                            pb.redirectError(new File(errFile));
                         } else {
                             pb.inheritIO();
                         }
