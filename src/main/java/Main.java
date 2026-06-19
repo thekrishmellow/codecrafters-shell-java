@@ -19,7 +19,6 @@ public class Main {
             } else {
                 System.out.println(inpu + ": command not found");
             }
-            System.out.println(inpu + ": command not found");
         }
     }
 }
