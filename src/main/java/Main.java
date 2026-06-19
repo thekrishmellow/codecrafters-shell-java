@@ -22,6 +22,12 @@ public class Main {
                 System.out.println(System.getProperty("user.dir"));
             } else if (input.startsWith("cd ")) {
                 String dirString = input.substring(3);
+                if (dirString.startsWith("~")) {
+                    String home = System.getenv("HOME");
+                    if (home != null) {
+                        dirString = home + dirString.substring(1);
+                    }
+                }
                 Path currentDir = Path.of(System.getProperty("user.dir"));
                 Path newDir = currentDir.resolve(dirString).normalize();
                 if (Files.isDirectory(newDir)) {
