@@ -38,12 +38,28 @@ public class Main {
                     System.out.println("cd: " + dirString + ": No such file or directory");
                 }
             } else if (input.startsWith("echo ")) {
-                String cmdArgs = input.substring(5);
-                System.out.println(String.join(" ", parseArguments(cmdArgs)));
+                List<String> echoParts = parseArguments(input.substring(5));
+                String outFile = null;
+                for (int i = 0; i < echoParts.size(); i++) {
+                    if (echoParts.get(i).equals(">") || echoParts.get(i).equals("1>")) {
+                        if (i + 1 < echoParts.size()) outFile = echoParts.get(i + 1);
+                        echoParts.subList(i, echoParts.size()).clear();
+                        break;
+                    }
+                }
+                String output = String.join(" ", echoParts);
+                if (outFile != null) {
+                    Files.writeString(Path.of(outFile), output + "\n");
+                } else {
+                    System.out.println(output);
+                }
             } else if (input.equals("echo")) {
                 System.out.println();
             } else if (input.startsWith("type ")) {
-                String cmd = input.substring(5);
+                String cmdArgs = input.substring(5);
+                List<String> typeParts = parseArguments(cmdArgs);
+                if (typeParts.isEmpty()) continue;
+                String cmd = typeParts.get(0);
                 if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type") || cmd.equals("pwd") || cmd.equals("cd")) {
                     System.out.println(cmd + " is a shell builtin");
                 } else {
@@ -57,13 +73,28 @@ public class Main {
             } else {
                 List<String> parts = parseArguments(input);
                 if (parts.isEmpty()) continue;
+
+                String outFile = null;
+                for (int i = 0; i < parts.size(); i++) {
+                    if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
+                        if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    }
+                }
+
                 String cmd = parts.get(0);
                 String pathStr = getExecutablePath(cmd);
                 if (pathStr != null) {
                     try {
                         ProcessBuilder pb = new ProcessBuilder(parts);
                         pb.directory(new File(System.getProperty("user.dir")));
-                        pb.inheritIO();
+                        if (outFile != null) {
+                            pb.redirectOutput(new File(outFile));
+                            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                        } else {
+                            pb.inheritIO();
+                        }
                         Process p = pb.start();
                         p.waitFor();
                     } catch (Exception e) {
