@@ -22,9 +22,10 @@ public class Main {
                 System.out.println(System.getProperty("user.dir"));
             } else if (input.startsWith("cd ")) {
                 String dirString = input.substring(3);
-                Path newDir = Path.of(dirString);
+                Path currentDir = Path.of(System.getProperty("user.dir"));
+                Path newDir = currentDir.resolve(dirString).normalize();
                 if (Files.isDirectory(newDir)) {
-                    System.setProperty("user.dir", newDir.toAbsolutePath().normalize().toString());
+                    System.setProperty("user.dir", newDir.toString());
                 } else {
                     System.out.println("cd: " + dirString + ": No such file or directory");
                 }
