@@ -84,12 +84,14 @@ public class Main {
                 }
             } else if (input.equals("echo")) {
                 System.out.println();
+            } else if (input.equals("jobs")) {
+                // empty implementation for now
             } else if (input.startsWith("type ")) {
                 String cmdArgs = input.substring(5);
                 List<String> typeParts = parseArguments(cmdArgs);
                 if (typeParts.isEmpty()) continue;
                 String cmd = typeParts.get(0);
-                if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type") || cmd.equals("pwd") || cmd.equals("cd")) {
+                if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type") || cmd.equals("pwd") || cmd.equals("cd") || cmd.equals("jobs")) {
                     System.out.println(cmd + " is a shell builtin");
                 } else {
                     String pathStr = getExecutablePath(cmd);
