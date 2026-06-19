@@ -2,6 +2,8 @@ import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -36,7 +38,8 @@ public class Main {
                     System.out.println("cd: " + dirString + ": No such file or directory");
                 }
             } else if (input.startsWith("echo ")) {
-                System.out.println(input.substring(5));
+                String cmdArgs = input.substring(5);
+                System.out.println(String.join(" ", parseArguments(cmdArgs)));
             } else if (input.equals("echo")) {
                 System.out.println();
             } else if (input.startsWith("type ")) {
@@ -52,8 +55,9 @@ public class Main {
                     }
                 }
             } else {
-                String[] parts = input.split(" ");
-                String cmd = parts[0];
+                List<String> parts = parseArguments(input);
+                if (parts.isEmpty()) continue;
+                String cmd = parts.get(0);
                 String pathStr = getExecutablePath(cmd);
                 if (pathStr != null) {
                     try {
@@ -83,5 +87,36 @@ public class Main {
             }
         }
         return null;
+    }
+
+    private static List<String> parseArguments(String input) {
+        List<String> args = new ArrayList<>();
+        StringBuilder currentArg = new StringBuilder();
+        boolean inSingleQuotes = false;
+        boolean inWord = false;
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            if (c == '\'') {
+                inSingleQuotes = !inSingleQuotes;
+                inWord = true;
+            } else if (c == ' ' && !inSingleQuotes) {
+                if (inWord) {
+                    args.add(currentArg.toString());
+                    currentArg.setLength(0);
+                    inWord = false;
+                }
+            } else {
+                currentArg.append(c);
+                inWord = true;
+            }
+        }
+
+        if (inWord) {
+            args.add(currentArg.toString());
+        }
+
+        return args;
     }
 }
