@@ -96,6 +96,7 @@ public class Main {
                 String outFile = null;
                 String errFile = null;
                 boolean isAppend = false;
+                boolean isErrAppend = false;
                 for (int i = 0; i < parts.size(); i++) {
                     if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
                         if (i + 1 < parts.size()) outFile = parts.get(i + 1);
@@ -108,6 +109,11 @@ public class Main {
                         break;
                     } else if (parts.get(i).equals("2>")) {
                         if (i + 1 < parts.size()) errFile = parts.get(i + 1);
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    } else if (parts.get(i).equals("2>>")) {
+                        if (i + 1 < parts.size()) errFile = parts.get(i + 1);
+                        isErrAppend = true;
                         parts.subList(i, parts.size()).clear();
                         break;
                     }
@@ -128,7 +134,11 @@ public class Main {
                             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
                         } else if (errFile != null) {
                             pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                            pb.redirectError(new File(errFile));
+                            if (isErrAppend) {
+                                pb.redirectError(ProcessBuilder.Redirect.appendTo(new File(errFile)));
+                            } else {
+                                pb.redirectError(new File(errFile));
+                            }
                         } else {
                             pb.inheritIO();
                         }
