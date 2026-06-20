@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    private static int nextJobNumber = 1;
-
     private static class Job {
         int id;
         long pid;
@@ -23,6 +21,19 @@ public class Main {
     }
 
     private static final List<Job> jobsList = new ArrayList<>();
+
+    private static int getNextJobNumber() {
+        if (jobsList.isEmpty()) {
+            return 1;
+        }
+        int maxId = 0;
+        for (Job job : jobsList) {
+            if (job.id > maxId) {
+                maxId = job.id;
+            }
+        }
+        return maxId + 1;
+    }
 
     private static void reapJobs(boolean printAll) {
         if (jobsList.isEmpty()) {
@@ -226,9 +237,9 @@ public class Main {
                         }
                         Process p = pb.start();
                         if (runInBackground) {
-                            System.out.println("[" + nextJobNumber + "] " + p.pid());
-                            jobsList.add(new Job(nextJobNumber, p.pid(), input.trim(), p));
-                            nextJobNumber++;
+                            int jobNum = getNextJobNumber();
+                            System.out.println("[" + jobNum + "] " + p.pid());
+                            jobsList.add(new Job(jobNum, p.pid(), input.trim(), p));
                         } else {
                             p.waitFor();
                         }
