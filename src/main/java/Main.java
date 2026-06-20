@@ -175,83 +175,139 @@ public class Main {
                     }
                 }
             } else {
-                List<String> parts = parseArguments(input);
-                if (parts.isEmpty()) continue;
+                // Check for pipeline first (unquoted |)
+                List<String> pipeSegments = splitOnPipe(input);
+                if (pipeSegments.size() == 2) {
+                    // Two-command pipeline
+                    List<String> leftParts = parseArguments(pipeSegments.get(0).trim());
+                    List<String> rightParts = parseArguments(pipeSegments.get(1).trim());
+                    if (!leftParts.isEmpty() && !rightParts.isEmpty()) {
+                        try {
+                            ProcessBuilder pbLeft = new ProcessBuilder(leftParts);
+                            pbLeft.directory(new File(System.getProperty("user.dir")));
+                            pbLeft.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                            pbLeft.redirectError(ProcessBuilder.Redirect.INHERIT);
 
-                boolean runInBackground = false;
-                if (parts.get(parts.size() - 1).equals("&")) {
-                    runInBackground = true;
-                    parts.remove(parts.size() - 1);
-                }
+                            ProcessBuilder pbRight = new ProcessBuilder(rightParts);
+                            pbRight.directory(new File(System.getProperty("user.dir")));
+                            pbRight.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                            pbRight.redirectError(ProcessBuilder.Redirect.INHERIT);
 
-                if (parts.isEmpty()) continue;
-
-                String outFile = null;
-                String errFile = null;
-                boolean isAppend = false;
-                boolean isErrAppend = false;
-                for (int i = 0; i < parts.size(); i++) {
-                    if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
-                        if (i + 1 < parts.size()) outFile = parts.get(i + 1);
-                        parts.subList(i, parts.size()).clear();
-                        break;
-                    } else if (parts.get(i).equals(">>") || parts.get(i).equals("1>>")) {
-                        if (i + 1 < parts.size()) outFile = parts.get(i + 1);
-                        isAppend = true;
-                        parts.subList(i, parts.size()).clear();
-                        break;
-                    } else if (parts.get(i).equals("2>")) {
-                        if (i + 1 < parts.size()) errFile = parts.get(i + 1);
-                        parts.subList(i, parts.size()).clear();
-                        break;
-                    } else if (parts.get(i).equals("2>>")) {
-                        if (i + 1 < parts.size()) errFile = parts.get(i + 1);
-                        isErrAppend = true;
-                        parts.subList(i, parts.size()).clear();
-                        break;
-                    }
-                }
-
-                String cmd = parts.get(0);
-                String pathStr = getExecutablePath(cmd);
-                if (pathStr != null) {
-                    try {
-                        ProcessBuilder pb = new ProcessBuilder(parts);
-                        pb.directory(new File(System.getProperty("user.dir")));
-                        if (outFile != null) {
-                            if (isAppend) {
-                                pb.redirectOutput(ProcessBuilder.Redirect.appendTo(new File(outFile)));
-                            } else {
-                                pb.redirectOutput(new File(outFile));
+                            List<Process> pipeline = ProcessBuilder.startPipeline(List.of(pbLeft, pbRight));
+                            for (Process p : pipeline) {
+                                p.waitFor();
                             }
-                            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-                        } else if (errFile != null) {
-                            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                            if (isErrAppend) {
-                                pb.redirectError(ProcessBuilder.Redirect.appendTo(new File(errFile)));
-                            } else {
-                                pb.redirectError(new File(errFile));
-                            }
-                        } else {
-                            pb.inheritIO();
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
                         }
-                        Process p = pb.start();
-                        if (runInBackground) {
-                            int jobNum = getNextJobNumber();
-                            System.out.println("[" + jobNum + "] " + p.pid());
-                            jobsList.add(new Job(jobNum, p.pid(), input.trim(), p));
-                        } else {
-                            p.waitFor();
-                        }
-                    } catch (Exception e) {
-                        System.out.println(cmd + ": " + e.getMessage());
                     }
                 } else {
-                    String commandName = runInBackground ? input.substring(0, input.lastIndexOf('&')).trim() : input;
-                    System.out.println(commandName + ": command not found");
+                    List<String> parts = parseArguments(input);
+                    if (parts.isEmpty()) continue;
+
+                    boolean runInBackground = false;
+                    if (parts.get(parts.size() - 1).equals("&")) {
+                        runInBackground = true;
+                        parts.remove(parts.size() - 1);
+                    }
+
+                    if (parts.isEmpty()) continue;
+
+                    String outFile = null;
+                    String errFile = null;
+                    boolean isAppend = false;
+                    boolean isErrAppend = false;
+                    for (int i = 0; i < parts.size(); i++) {
+                        if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
+                            if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                            parts.subList(i, parts.size()).clear();
+                            break;
+                        } else if (parts.get(i).equals(">>") || parts.get(i).equals("1>>")) {
+                            if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                            isAppend = true;
+                            parts.subList(i, parts.size()).clear();
+                            break;
+                        } else if (parts.get(i).equals("2>")) {
+                            if (i + 1 < parts.size()) errFile = parts.get(i + 1);
+                            parts.subList(i, parts.size()).clear();
+                            break;
+                        } else if (parts.get(i).equals("2>>")) {
+                            if (i + 1 < parts.size()) errFile = parts.get(i + 1);
+                            isErrAppend = true;
+                            parts.subList(i, parts.size()).clear();
+                            break;
+                        }
+                    }
+
+                    String cmd = parts.get(0);
+                    String pathStr = getExecutablePath(cmd);
+                    if (pathStr != null) {
+                        try {
+                            ProcessBuilder pb = new ProcessBuilder(parts);
+                            pb.directory(new File(System.getProperty("user.dir")));
+                            if (outFile != null) {
+                                if (isAppend) {
+                                    pb.redirectOutput(ProcessBuilder.Redirect.appendTo(new File(outFile)));
+                                } else {
+                                    pb.redirectOutput(new File(outFile));
+                                }
+                                pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                            } else if (errFile != null) {
+                                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                                if (isErrAppend) {
+                                    pb.redirectError(ProcessBuilder.Redirect.appendTo(new File(errFile)));
+                                } else {
+                                    pb.redirectError(new File(errFile));
+                                }
+                            } else {
+                                pb.inheritIO();
+                            }
+                            Process p = pb.start();
+                            if (runInBackground) {
+                                int jobNum = getNextJobNumber();
+                                System.out.println("[" + jobNum + "] " + p.pid());
+                                jobsList.add(new Job(jobNum, p.pid(), input.trim(), p));
+                            } else {
+                                p.waitFor();
+                            }
+                        } catch (Exception e) {
+                            System.out.println(cmd + ": " + e.getMessage());
+                        }
+                    } else {
+                        String commandName = runInBackground ? input.substring(0, input.lastIndexOf('&')).trim() : input;
+                        System.out.println(commandName + ": command not found");
+                    }
                 }
             }
         }
+    }
+
+    // Split input on the first unquoted | into exactly 2 segments (or 1 if no pipe)
+    private static List<String> splitOnPipe(String input) {
+        List<String> segments = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inSingle = false;
+        boolean inDouble = false;
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (c == '\\' && !inSingle) {
+                current.append(c);
+                if (i + 1 < input.length()) current.append(input.charAt(++i));
+            } else if (c == '\'' && !inDouble) {
+                inSingle = !inSingle;
+                current.append(c);
+            } else if (c == '"' && !inSingle) {
+                inDouble = !inDouble;
+                current.append(c);
+            } else if (c == '|' && !inSingle && !inDouble) {
+                segments.add(current.toString());
+                current.setLength(0);
+            } else {
+                current.append(c);
+            }
+        }
+        segments.add(current.toString());
+        return segments;
     }
 
     private static String getExecutablePath(String command) {
