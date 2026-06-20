@@ -8,6 +8,22 @@ import java.util.List;
 public class Main {
     private static int nextJobNumber = 1;
 
+    private static class Job {
+        int id;
+        long pid;
+        String command;
+        Process process;
+
+        Job(int id, long pid, String command, Process process) {
+            this.id = id;
+            this.pid = pid;
+            this.command = command;
+            this.process = process;
+        }
+    }
+
+    private static final List<Job> jobsList = new ArrayList<>();
+
     public static void main(String[] args) throws Exception {
         // TODO: Uncomment the code below to pass the first stage
         // System.out.print("$ ");
@@ -87,7 +103,30 @@ public class Main {
             } else if (input.equals("echo")) {
                 System.out.println();
             } else if (input.equals("jobs")) {
-                // empty implementation for now
+                int currentId = -1;
+                int previousId = -1;
+                for (int i = jobsList.size() - 1; i >= 0; i--) {
+                    Job j = jobsList.get(i);
+                    if (j.process.isAlive()) {
+                        if (currentId == -1) {
+                            currentId = j.id;
+                        } else if (previousId == -1) {
+                            previousId = j.id;
+                            break;
+                        }
+                    }
+                }
+                for (Job job : jobsList) {
+                    if (job.process.isAlive()) {
+                        char marker = ' ';
+                        if (job.id == currentId) {
+                            marker = '+';
+                        } else if (job.id == previousId) {
+                            marker = '-';
+                        }
+                        System.out.printf("[%d]%c  %-24s%s\n", job.id, marker, "Running", job.command);
+                    }
+                }
             } else if (input.startsWith("type ")) {
                 String cmdArgs = input.substring(5);
                 List<String> typeParts = parseArguments(cmdArgs);
@@ -167,6 +206,7 @@ public class Main {
                         Process p = pb.start();
                         if (runInBackground) {
                             System.out.println("[" + nextJobNumber + "] " + p.pid());
+                            jobsList.add(new Job(nextJobNumber, p.pid(), input.trim(), p));
                             nextJobNumber++;
                         } else {
                             p.waitFor();
