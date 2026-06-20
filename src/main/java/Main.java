@@ -107,26 +107,33 @@ public class Main {
                 int previousId = -1;
                 for (int i = jobsList.size() - 1; i >= 0; i--) {
                     Job j = jobsList.get(i);
-                    if (j.process.isAlive()) {
-                        if (currentId == -1) {
-                            currentId = j.id;
-                        } else if (previousId == -1) {
-                            previousId = j.id;
-                            break;
-                        }
+                    if (currentId == -1) {
+                        currentId = j.id;
+                    } else if (previousId == -1) {
+                        previousId = j.id;
+                        break;
                     }
                 }
+                List<Job> toRemove = new ArrayList<>();
                 for (Job job : jobsList) {
-                    if (job.process.isAlive()) {
-                        char marker = ' ';
-                        if (job.id == currentId) {
-                            marker = '+';
-                        } else if (job.id == previousId) {
-                            marker = '-';
-                        }
-                        System.out.printf("[%d]%c  %-24s%s\n", job.id, marker, "Running", job.command);
+                    boolean alive = job.process.isAlive();
+                    String status = alive ? "Running" : "Done";
+                    char marker = ' ';
+                    if (job.id == currentId) {
+                        marker = '+';
+                    } else if (job.id == previousId) {
+                        marker = '-';
                     }
+                    String displayCommand = job.command;
+                    if (!alive) {
+                        if (displayCommand.endsWith("&")) {
+                            displayCommand = displayCommand.substring(0, displayCommand.length() - 1).trim();
+                        }
+                        toRemove.add(job);
+                    }
+                    System.out.printf("[%d]%c  %-24s%s\n", job.id, marker, status, displayCommand);
                 }
+                jobsList.removeAll(toRemove);
             } else if (input.startsWith("type ")) {
                 String cmdArgs = input.substring(5);
                 List<String> typeParts = parseArguments(cmdArgs);
