@@ -24,6 +24,49 @@ public class Main {
 
     private static final List<Job> jobsList = new ArrayList<>();
 
+    private static void reapJobs(boolean printAll) {
+        if (jobsList.isEmpty()) {
+            return;
+        }
+        int currentId = -1;
+        int previousId = -1;
+        for (int i = jobsList.size() - 1; i >= 0; i--) {
+            Job j = jobsList.get(i);
+            if (currentId == -1) {
+                currentId = j.id;
+            } else if (previousId == -1) {
+                previousId = j.id;
+                break;
+            }
+        }
+        List<Job> toRemove = new ArrayList<>();
+        for (Job job : jobsList) {
+            boolean alive = job.process.isAlive();
+            String status = alive ? "Running" : "Done";
+            
+            if (printAll || !alive) {
+                char marker = ' ';
+                if (job.id == currentId) {
+                    marker = '+';
+                } else if (job.id == previousId) {
+                    marker = '-';
+                }
+                String displayCommand = job.command;
+                if (!alive) {
+                    if (displayCommand.endsWith("&")) {
+                        displayCommand = displayCommand.substring(0, displayCommand.length() - 1).trim();
+                    }
+                }
+                System.out.printf("[%d]%c  %-24s%s\n", job.id, marker, status, displayCommand);
+            }
+            
+            if (!alive) {
+                toRemove.add(job);
+            }
+        }
+        jobsList.removeAll(toRemove);
+    }
+
     public static void main(String[] args) throws Exception {
         // TODO: Uncomment the code below to pass the first stage
         // System.out.print("$ ");
@@ -31,6 +74,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
+            reapJobs(false);
             System.out.print("$ ");
             if (!scanner.hasNextLine()) {
                 break;
@@ -103,37 +147,7 @@ public class Main {
             } else if (input.equals("echo")) {
                 System.out.println();
             } else if (input.equals("jobs")) {
-                int currentId = -1;
-                int previousId = -1;
-                for (int i = jobsList.size() - 1; i >= 0; i--) {
-                    Job j = jobsList.get(i);
-                    if (currentId == -1) {
-                        currentId = j.id;
-                    } else if (previousId == -1) {
-                        previousId = j.id;
-                        break;
-                    }
-                }
-                List<Job> toRemove = new ArrayList<>();
-                for (Job job : jobsList) {
-                    boolean alive = job.process.isAlive();
-                    String status = alive ? "Running" : "Done";
-                    char marker = ' ';
-                    if (job.id == currentId) {
-                        marker = '+';
-                    } else if (job.id == previousId) {
-                        marker = '-';
-                    }
-                    String displayCommand = job.command;
-                    if (!alive) {
-                        if (displayCommand.endsWith("&")) {
-                            displayCommand = displayCommand.substring(0, displayCommand.length() - 1).trim();
-                        }
-                        toRemove.add(job);
-                    }
-                    System.out.printf("[%d]%c  %-24s%s\n", job.id, marker, status, displayCommand);
-                }
-                jobsList.removeAll(toRemove);
+                reapJobs(true);
             } else if (input.startsWith("type ")) {
                 String cmdArgs = input.substring(5);
                 List<String> typeParts = parseArguments(cmdArgs);
