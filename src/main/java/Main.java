@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+    private static int nextJobNumber = 1;
+
     public static void main(String[] args) throws Exception {
         // TODO: Uncomment the code below to pass the first stage
         // System.out.print("$ ");
@@ -105,6 +107,14 @@ public class Main {
                 List<String> parts = parseArguments(input);
                 if (parts.isEmpty()) continue;
 
+                boolean runInBackground = false;
+                if (parts.get(parts.size() - 1).equals("&")) {
+                    runInBackground = true;
+                    parts.remove(parts.size() - 1);
+                }
+
+                if (parts.isEmpty()) continue;
+
                 String outFile = null;
                 String errFile = null;
                 boolean isAppend = false;
@@ -155,12 +165,18 @@ public class Main {
                             pb.inheritIO();
                         }
                         Process p = pb.start();
-                        p.waitFor();
+                        if (runInBackground) {
+                            System.out.println("[" + nextJobNumber + "] " + p.pid());
+                            nextJobNumber++;
+                        } else {
+                            p.waitFor();
+                        }
                     } catch (Exception e) {
                         System.out.println(cmd + ": " + e.getMessage());
                     }
                 } else {
-                    System.out.println(input + ": command not found");
+                    String commandName = runInBackground ? input.substring(0, input.lastIndexOf('&')).trim() : input;
+                    System.out.println(commandName + ": command not found");
                 }
             }
         }
