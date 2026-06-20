@@ -91,7 +91,62 @@ public class Main {
                 break;
             }
             String input = scanner.nextLine();
-            if (input.equals("exit")) {
+            // Always check for pipeline first so e.g. "echo x | wc" routes correctly
+            List<String> pipeSegments = splitOnPipe(input);
+            if (pipeSegments.size() == 2) {
+                    // Two-command pipeline
+                    List<String> leftParts = parseArguments(pipeSegments.get(0).trim());
+                    List<String> rightParts = parseArguments(pipeSegments.get(1).trim());
+                    if (!leftParts.isEmpty() && !rightParts.isEmpty()) {
+                        boolean leftIsBuiltin = isBuiltin(leftParts.get(0));
+                        boolean rightIsBuiltin = isBuiltin(rightParts.get(0));
+                        try {
+                            if (!leftIsBuiltin && !rightIsBuiltin) {
+                                // Both external — use kernel pipe via startPipeline
+                                ProcessBuilder pbLeft = new ProcessBuilder(leftParts);
+                                pbLeft.directory(new File(System.getProperty("user.dir")));
+                                pbLeft.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                                pbLeft.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+                                ProcessBuilder pbRight = new ProcessBuilder(rightParts);
+                                pbRight.directory(new File(System.getProperty("user.dir")));
+                                pbRight.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                                pbRight.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+                                List<Process> pipeline = ProcessBuilder.startPipeline(List.of(pbLeft, pbRight));
+                                for (Process p : pipeline) {
+                                    p.waitFor();
+                                }
+                            } else if (leftIsBuiltin && !rightIsBuiltin) {
+                                // Left is builtin: write its output into right process's stdin
+                                ProcessBuilder pbRight = new ProcessBuilder(rightParts);
+                                pbRight.directory(new File(System.getProperty("user.dir")));
+                                pbRight.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                                pbRight.redirectError(ProcessBuilder.Redirect.INHERIT);
+                                Process rightProcess = pbRight.start();
+                                try (java.io.PrintStream ps = new java.io.PrintStream(rightProcess.getOutputStream())) {
+                                    executeBuiltinToStream(leftParts, ps);
+                                }
+                                rightProcess.waitFor();
+                            } else if (!leftIsBuiltin && rightIsBuiltin) {
+                                // Right is builtin: run left with stdout discarded; run right builtin normally
+                                ProcessBuilder pbLeft = new ProcessBuilder(leftParts);
+                                pbLeft.directory(new File(System.getProperty("user.dir")));
+                                pbLeft.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                                pbLeft.redirectOutput(new File("/dev/null"));
+                                pbLeft.redirectError(ProcessBuilder.Redirect.INHERIT);
+                                Process leftProcess = pbLeft.start();
+                                executeBuiltinToStream(rightParts, System.out);
+                                leftProcess.waitFor();
+                            } else {
+                                // Both builtins: discard left output, run right builtin normally
+                                executeBuiltinToStream(rightParts, System.out);
+                            }
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+                } else if (input.equals("exit")) {
                 break;
             } else if (input.equals("pwd")) {
                 System.out.println(System.getProperty("user.dir"));
@@ -164,7 +219,7 @@ public class Main {
                 List<String> typeParts = parseArguments(cmdArgs);
                 if (typeParts.isEmpty()) continue;
                 String cmd = typeParts.get(0);
-                if (cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type") || cmd.equals("pwd") || cmd.equals("cd") || cmd.equals("jobs")) {
+                if (isBuiltin(cmd)) {
                     System.out.println(cmd + " is a shell builtin");
                 } else {
                     String pathStr = getExecutablePath(cmd);
@@ -175,108 +230,80 @@ public class Main {
                     }
                 }
             } else {
-                // Check for pipeline first (unquoted |)
-                List<String> pipeSegments = splitOnPipe(input);
-                if (pipeSegments.size() == 2) {
-                    // Two-command pipeline
-                    List<String> leftParts = parseArguments(pipeSegments.get(0).trim());
-                    List<String> rightParts = parseArguments(pipeSegments.get(1).trim());
-                    if (!leftParts.isEmpty() && !rightParts.isEmpty()) {
-                        try {
-                            ProcessBuilder pbLeft = new ProcessBuilder(leftParts);
-                            pbLeft.directory(new File(System.getProperty("user.dir")));
-                            pbLeft.redirectInput(ProcessBuilder.Redirect.INHERIT);
-                            pbLeft.redirectError(ProcessBuilder.Redirect.INHERIT);
+                List<String> parts = parseArguments(input);
+                if (parts.isEmpty()) continue;
 
-                            ProcessBuilder pbRight = new ProcessBuilder(rightParts);
-                            pbRight.directory(new File(System.getProperty("user.dir")));
-                            pbRight.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                            pbRight.redirectError(ProcessBuilder.Redirect.INHERIT);
+                boolean runInBackground = false;
+                if (parts.get(parts.size() - 1).equals("&")) {
+                    runInBackground = true;
+                    parts.remove(parts.size() - 1);
+                }
 
-                            List<Process> pipeline = ProcessBuilder.startPipeline(List.of(pbLeft, pbRight));
-                            for (Process p : pipeline) {
-                                p.waitFor();
+                if (parts.isEmpty()) continue;
+
+                String outFile = null;
+                String errFile = null;
+                boolean isAppend = false;
+                boolean isErrAppend = false;
+                for (int i = 0; i < parts.size(); i++) {
+                    if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
+                        if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    } else if (parts.get(i).equals(">>") || parts.get(i).equals("1>>")) {
+                        if (i + 1 < parts.size()) outFile = parts.get(i + 1);
+                        isAppend = true;
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    } else if (parts.get(i).equals("2>")) {
+                        if (i + 1 < parts.size()) errFile = parts.get(i + 1);
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    } else if (parts.get(i).equals("2>>")) {
+                        if (i + 1 < parts.size()) errFile = parts.get(i + 1);
+                        isErrAppend = true;
+                        parts.subList(i, parts.size()).clear();
+                        break;
+                    }
+                }
+
+                String cmd = parts.get(0);
+                String pathStr = getExecutablePath(cmd);
+                if (pathStr != null) {
+                    try {
+                        ProcessBuilder pb = new ProcessBuilder(parts);
+                        pb.directory(new File(System.getProperty("user.dir")));
+                        if (outFile != null) {
+                            if (isAppend) {
+                                pb.redirectOutput(ProcessBuilder.Redirect.appendTo(new File(outFile)));
+                            } else {
+                                pb.redirectOutput(new File(outFile));
                             }
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
+                            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                        } else if (errFile != null) {
+                            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                            if (isErrAppend) {
+                                pb.redirectError(ProcessBuilder.Redirect.appendTo(new File(errFile)));
+                            } else {
+                                pb.redirectError(new File(errFile));
+                            }
+                        } else {
+                            pb.inheritIO();
                         }
+                        Process p = pb.start();
+                        if (runInBackground) {
+                            int jobNum = getNextJobNumber();
+                            System.out.println("[" + jobNum + "] " + p.pid());
+                            jobsList.add(new Job(jobNum, p.pid(), input.trim(), p));
+                        } else {
+                            p.waitFor();
+                        }
+                    } catch (Exception e) {
+                        System.out.println(cmd + ": " + e.getMessage());
                     }
                 } else {
-                    List<String> parts = parseArguments(input);
-                    if (parts.isEmpty()) continue;
-
-                    boolean runInBackground = false;
-                    if (parts.get(parts.size() - 1).equals("&")) {
-                        runInBackground = true;
-                        parts.remove(parts.size() - 1);
-                    }
-
-                    if (parts.isEmpty()) continue;
-
-                    String outFile = null;
-                    String errFile = null;
-                    boolean isAppend = false;
-                    boolean isErrAppend = false;
-                    for (int i = 0; i < parts.size(); i++) {
-                        if (parts.get(i).equals(">") || parts.get(i).equals("1>")) {
-                            if (i + 1 < parts.size()) outFile = parts.get(i + 1);
-                            parts.subList(i, parts.size()).clear();
-                            break;
-                        } else if (parts.get(i).equals(">>") || parts.get(i).equals("1>>")) {
-                            if (i + 1 < parts.size()) outFile = parts.get(i + 1);
-                            isAppend = true;
-                            parts.subList(i, parts.size()).clear();
-                            break;
-                        } else if (parts.get(i).equals("2>")) {
-                            if (i + 1 < parts.size()) errFile = parts.get(i + 1);
-                            parts.subList(i, parts.size()).clear();
-                            break;
-                        } else if (parts.get(i).equals("2>>")) {
-                            if (i + 1 < parts.size()) errFile = parts.get(i + 1);
-                            isErrAppend = true;
-                            parts.subList(i, parts.size()).clear();
-                            break;
-                        }
-                    }
-
-                    String cmd = parts.get(0);
-                    String pathStr = getExecutablePath(cmd);
-                    if (pathStr != null) {
-                        try {
-                            ProcessBuilder pb = new ProcessBuilder(parts);
-                            pb.directory(new File(System.getProperty("user.dir")));
-                            if (outFile != null) {
-                                if (isAppend) {
-                                    pb.redirectOutput(ProcessBuilder.Redirect.appendTo(new File(outFile)));
-                                } else {
-                                    pb.redirectOutput(new File(outFile));
-                                }
-                                pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-                            } else if (errFile != null) {
-                                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                                if (isErrAppend) {
-                                    pb.redirectError(ProcessBuilder.Redirect.appendTo(new File(errFile)));
-                                } else {
-                                    pb.redirectError(new File(errFile));
-                                }
-                            } else {
-                                pb.inheritIO();
-                            }
-                            Process p = pb.start();
-                            if (runInBackground) {
-                                int jobNum = getNextJobNumber();
-                                System.out.println("[" + jobNum + "] " + p.pid());
-                                jobsList.add(new Job(jobNum, p.pid(), input.trim(), p));
-                            } else {
-                                p.waitFor();
-                            }
-                        } catch (Exception e) {
-                            System.out.println(cmd + ": " + e.getMessage());
-                        }
-                    } else {
-                        String commandName = runInBackground ? input.substring(0, input.lastIndexOf('&')).trim() : input;
-                        System.out.println(commandName + ": command not found");
-                    }
+                    String commandName = runInBackground ? input.substring(0, input.lastIndexOf('&')).trim() : input;
+                    System.out.println(commandName + ": command not found");
                 }
             }
         }
@@ -308,6 +335,45 @@ public class Main {
         }
         segments.add(current.toString());
         return segments;
+    }
+
+    private static boolean isBuiltin(String cmd) {
+        return cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type")
+                || cmd.equals("pwd") || cmd.equals("cd") || cmd.equals("jobs");
+    }
+
+    // Run a builtin command writing output to the given stream (for use in pipelines)
+    private static void executeBuiltinToStream(List<String> parts, java.io.PrintStream out) {
+        String cmd = parts.get(0);
+        if (cmd.equals("echo")) {
+            if (parts.size() > 1) {
+                out.println(String.join(" ", parts.subList(1, parts.size())));
+            } else {
+                out.println();
+            }
+        } else if (cmd.equals("type")) {
+            for (int i = 1; i < parts.size(); i++) {
+                String target = parts.get(i);
+                if (isBuiltin(target)) {
+                    out.println(target + " is a shell builtin");
+                } else {
+                    String path = getExecutablePath(target);
+                    if (path != null) {
+                        out.println(target + " is " + path);
+                    } else {
+                        out.println(target + ": not found");
+                    }
+                }
+            }
+        } else if (cmd.equals("pwd")) {
+            out.println(System.getProperty("user.dir"));
+        } else if (cmd.equals("jobs")) {
+            // Delegate to normal reapJobs logic via System.out swap
+            java.io.PrintStream old = System.out;
+            System.setOut(out);
+            reapJobs(true);
+            System.setOut(old);
+        }
     }
 
     private static String getExecutablePath(String command) {

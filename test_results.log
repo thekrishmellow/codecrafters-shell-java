@@ -7,73 +7,85 @@ Running tests on your code. Logs should appear shortly...
 [33m[compile][0m Moved ./.codecrafters/run.sh → ./your_program.sh
 [33m[compile][0m [32mCompilation successful.[0m
 
+[33m[tester::#NY9] [0m[94mRunning tests for Stage #NY9 (Pipelines - Pipelines with built-ins)[0m
+[33m[tester::#NY9] [setup] [0m[94mexport PATH=/tmp/grape/orange/orange:$PATH[0m
+[33m[tester::#NY9] [0m[94mRunning ./your_program.sh[0m
+[33m[your-program] [0m[0m$ echo apple-mango | wc[0m
+[33m[your-program] [0m[0m       1       1      12[0m
+[33m[tester::#NY9] [0m[92m✓ Received expected output[0m
+[33m[your-program] [0m[0m$ ls | type exit[0m
+[33m[your-program] [0m[0mexit is a shell builtin[0m
+[33m[tester::#NY9] [0m[92m✓ Received expected output[0m
+[33m[your-program] [0m[0m$ [0m
+[33m[tester::#NY9] [0m[92mTest passed.[0m
+
 [33m[tester::#BR6] [0m[94mRunning tests for Stage #BR6 (Pipelines - Dual-command pipeline)[0m
-[33m[tester::#BR6] [setup] [0m[94mexport PATH=/tmp/blueberry/pear/blueberry:$PATH[0m
+[33m[tester::#BR6] [setup] [0m[94mexport PATH=/tmp/mango/banana/pear:$PATH[0m
 [33m[tester::#BR6] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#BR6] [setup] [0m[94mecho -e "pineapple mango\ngrape raspberry\nstrawberry pear\norange banana\nblueberry apple" > "/tmp/ant/file-26"[0m
-[33m[your-program] [0m[0m$ cat /tmp/ant/file-26 | wc[0m
+[33m[tester::#BR6] [setup] [0m[94mecho -e "blueberry apple\npineapple strawberry\norange grape\nraspberry banana\nmango pear" > "/tmp/rat/file-51"[0m
+[33m[your-program] [0m[0m$ cat /tmp/rat/file-51 | wc[0m
 [33m[your-program] [0m[0m       5      10      78[0m
 [33m[tester::#BR6] [0m[92m✓ Received expected response[0m
-[33m[tester::#BR6] [setup] [0m[94mecho -e "1. orange grape\n2. banana apple\n3. pear raspberry" > "/tmp/fox/file-62"[0m
-[33m[your-program] [0m[0m$ tail -f /tmp/fox/file-62 | head -n 5[0m
-[33m[your-program] [0m[0m1. orange grape[0m
-[33m[your-program] [0m[0m2. banana apple[0m
-[33m[your-program] [0m[0m3. pear raspberry[0m
+[33m[tester::#BR6] [setup] [0m[94mecho -e "1. pineapple apple\n2. strawberry raspberry\n3. orange grape" > "/tmp/cow/file-35"[0m
+[33m[your-program] [0m[0m$ tail -f /tmp/cow/file-35 | head -n 5[0m
+[33m[your-program] [0m[0m1. pineapple apple[0m
+[33m[your-program] [0m[0m2. strawberry raspberry[0m
+[33m[your-program] [0m[0m3. orange grape[0m
 [33m[tester::#BR6] [0m[92m✓ Received redirected file content[0m
-[33m[your-program] [0m[0m4. mango pear[0m
+[33m[your-program] [0m[0m4. orange pineapple[0m
 [33m[tester::#BR6] [0m[92m✓ Received appended line 4[0m
-[33m[your-program] [0m[0m5. apple grape[0m
+[33m[your-program] [0m[0m5. banana pineapple[0m
 [33m[tester::#BR6] [0m[92m✓ Received appended line 5[0m
 [33m[tester::#BR6] [0m[92mTest passed.[0m
 
 [33m[tester::#FY4] [0m[94mRunning tests for Stage #FY4 (Background Jobs - Recycle job numbers)[0m
-[33m[tester::#FY4] [setup] [0m[94mmkfifo /tmp/pear-95[0m
+[33m[tester::#FY4] [setup] [0m[94mmkfifo /tmp/raspberry-5[0m
 [33m[tester::#FY4] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ cat /tmp/pear-95 &[0m
-[33m[your-program] [0m[0m[1] 149[0m
-[33m[tester::#FY4] [0m[92m✓ Found process with PID 149[0m
-[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 149[0m
+[33m[your-program] [0m[0m$ cat /tmp/raspberry-5 &[0m
+[33m[your-program] [0m[0m[1] 167[0m
+[33m[tester::#FY4] [0m[92m✓ Found process with PID 167[0m
+[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 167[0m
 [33m[tester::#FY4] [0m[92m✓ Output includes job number with PID[0m
-[33m[tester::#FY4] [setup] [0m[94mecho -ne "" > "/tmp/pear-95"[0m
-[33m[your-program] [0m[0m$ echo raspberry[0m
-[33m[your-program] [0m[0mraspberry[0m
-[33m[your-program] [0m[0m[1]+  Done                    cat /tmp/pear-95[0m
+[33m[tester::#FY4] [setup] [0m[94mecho -ne "" > "/tmp/raspberry-5"[0m
+[33m[your-program] [0m[0m$ echo blueberry[0m
+[33m[your-program] [0m[0mblueberry[0m
+[33m[your-program] [0m[0m[1]+  Done                    cat /tmp/raspberry-5[0m
 [33m[tester::#FY4] [0m[92m✓ Received output for echo followed by an entry for the reaped job[0m
-[33m[your-program] [0m[0m$ echo pear[0m
-[33m[your-program] [0m[0mpear[0m
+[33m[your-program] [0m[0m$ echo mango[0m
+[33m[your-program] [0m[0mmango[0m
 [33m[tester::#FY4] [0m[92m✓ Received output for echo[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[tester::#FY4] [0m[92m✓ No jobs[0m
 [33m[your-program] [0m[0m$ sleep 10 &[0m
-[33m[your-program] [0m[0m[1] 151[0m
-[33m[tester::#FY4] [0m[92m✓ Found process with PID 151[0m
-[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 151[0m
+[33m[your-program] [0m[0m[1] 169[0m
+[33m[tester::#FY4] [0m[92m✓ Found process with PID 169[0m
+[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 169[0m
 [33m[tester::#FY4] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]+  Running                 sleep 10 &[0m
 [33m[tester::#FY4] [0m[92m✓ 1 entry matches the running job[0m
 [33m[tester::#FY4] [0m[94mTearing down shell[0m
-[33m[tester::#FY4] [setup] [0m[94mmkfifo /tmp/mango-77[0m
+[33m[tester::#FY4] [setup] [0m[94mmkfifo /tmp/grape-49[0m
 [33m[tester::#FY4] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ sleep 100 &[0m
-[33m[your-program] [0m[0m[1] 165[0m
-[33m[tester::#FY4] [0m[92m✓ Found process with PID 165[0m
-[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 165[0m
+[33m[your-program] [0m[0m[1] 183[0m
+[33m[tester::#FY4] [0m[92m✓ Found process with PID 183[0m
+[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 183[0m
 [33m[tester::#FY4] [0m[92m✓ Output includes job number with PID[0m
-[33m[your-program] [0m[0m$ cat /tmp/mango-77 &[0m
-[33m[your-program] [0m[0m[2] 167[0m
-[33m[tester::#FY4] [0m[92m✓ Found process with PID 167[0m
-[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 167[0m
+[33m[your-program] [0m[0m$ cat /tmp/grape-49 &[0m
+[33m[your-program] [0m[0m[2] 185[0m
+[33m[tester::#FY4] [0m[92m✓ Found process with PID 185[0m
+[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 185[0m
 [33m[tester::#FY4] [0m[92m✓ Output includes job number with PID[0m
-[33m[tester::#FY4] [setup] [0m[94mecho -ne "" > "/tmp/mango-77"[0m
-[33m[your-program] [0m[0m$ echo raspberry[0m
-[33m[your-program] [0m[0mraspberry[0m
-[33m[your-program] [0m[0m[2]+  Done                    cat /tmp/mango-77[0m
+[33m[tester::#FY4] [setup] [0m[94mecho -ne "" > "/tmp/grape-49"[0m
+[33m[your-program] [0m[0m$ echo pear[0m
+[33m[your-program] [0m[0mpear[0m
+[33m[your-program] [0m[0m[2]+  Done                    cat /tmp/grape-49[0m
 [33m[tester::#FY4] [0m[92m✓ Received output for echo followed by an entry for the reaped job[0m
 [33m[your-program] [0m[0m$ sleep 50 &[0m
-[33m[your-program] [0m[0m[2] 169[0m
-[33m[tester::#FY4] [0m[92m✓ Found process with PID 169[0m
-[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 169[0m
+[33m[your-program] [0m[0m[2] 187[0m
+[33m[tester::#FY4] [0m[92m✓ Found process with PID 187[0m
+[33m[tester::#FY4] [0m[92m✓ Expected executable path found for process with PID 187[0m
 [33m[tester::#FY4] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]-  Running                 sleep 100 &[0m
@@ -83,26 +95,26 @@ Running tests on your code. Logs should appear shortly...
 [33m[tester::#FY4] [0m[92mTest passed.[0m
 
 [33m[tester::#BV8] [0m[94mRunning tests for Stage #BV8 (Background Jobs - Reap before the next prompt)[0m
-[33m[tester::#BV8] [setup] [0m[94mmkfifo /tmp/apple-6[0m
+[33m[tester::#BV8] [setup] [0m[94mmkfifo /tmp/apple-24[0m
 [33m[tester::#BV8] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ sleep 500 &[0m
-[33m[your-program] [0m[0m[1] 183[0m
-[33m[tester::#BV8] [0m[92m✓ Found process with PID 183[0m
-[33m[tester::#BV8] [0m[92m✓ Expected executable path found for process with PID 183[0m
+[33m[your-program] [0m[0m[1] 201[0m
+[33m[tester::#BV8] [0m[92m✓ Found process with PID 201[0m
+[33m[tester::#BV8] [0m[92m✓ Expected executable path found for process with PID 201[0m
 [33m[tester::#BV8] [0m[92m✓ Output includes job number with PID[0m
-[33m[your-program] [0m[0m$ cat /tmp/apple-6 &[0m
-[33m[your-program] [0m[0m[2] 185[0m
-[33m[tester::#BV8] [0m[92m✓ Found process with PID 185[0m
-[33m[tester::#BV8] [0m[92m✓ Expected executable path found for process with PID 185[0m
+[33m[your-program] [0m[0m$ cat /tmp/apple-24 &[0m
+[33m[your-program] [0m[0m[2] 203[0m
+[33m[tester::#BV8] [0m[92m✓ Found process with PID 203[0m
+[33m[tester::#BV8] [0m[92m✓ Expected executable path found for process with PID 203[0m
 [33m[tester::#BV8] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]-  Running                 sleep 500 &[0m
-[33m[your-program] [0m[0m[2]+  Running                 cat /tmp/apple-6 &[0m
+[33m[your-program] [0m[0m[2]+  Running                 cat /tmp/apple-24 &[0m
 [33m[tester::#BV8] [0m[92m✓ Found 2 entries for the running jobs[0m
-[33m[tester::#BV8] [setup] [0m[94mecho -ne "" > "/tmp/apple-6"[0m
-[33m[your-program] [0m[0m$ echo raspberry[0m
-[33m[your-program] [0m[0mraspberry[0m
-[33m[your-program] [0m[0m[2]+  Done                    cat /tmp/apple-6[0m
+[33m[tester::#BV8] [setup] [0m[94mecho -ne "" > "/tmp/apple-24"[0m
+[33m[your-program] [0m[0m$ echo pear[0m
+[33m[your-program] [0m[0mpear[0m
+[33m[your-program] [0m[0m[2]+  Done                    cat /tmp/apple-24[0m
 [33m[tester::#BV8] [0m[92m✓ Found command output followed by an entry for the reaped job[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]+  Running                 sleep 500 &[0m
@@ -111,34 +123,34 @@ Running tests on your code. Logs should appear shortly...
 [33m[tester::#BV8] [0m[92mTest passed.[0m
 
 [33m[tester::#RQ2] [0m[94mRunning tests for Stage #RQ2 (Background Jobs - Reap multiple jobs)[0m
-[33m[tester::#RQ2] [setup] [0m[94mmkfifo /tmp/pineapple-70[0m
-[33m[tester::#RQ2] [setup] [0m[94mmkfifo /tmp/mango-48[0m
+[33m[tester::#RQ2] [setup] [0m[94mmkfifo /tmp/blueberry-94[0m
+[33m[tester::#RQ2] [setup] [0m[94mmkfifo /tmp/raspberry-27[0m
 [33m[tester::#RQ2] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ sleep 500 &[0m
-[33m[your-program] [0m[0m[1] 200[0m
-[33m[tester::#RQ2] [0m[92m✓ Found process with PID 200[0m
-[33m[tester::#RQ2] [0m[92m✓ Expected executable path found for process with PID 200[0m
+[33m[your-program] [0m[0m[1] 218[0m
+[33m[tester::#RQ2] [0m[92m✓ Found process with PID 218[0m
+[33m[tester::#RQ2] [0m[92m✓ Expected executable path found for process with PID 218[0m
 [33m[tester::#RQ2] [0m[92m✓ Output includes job number with PID[0m
-[33m[your-program] [0m[0m$ cat /tmp/pineapple-70 &[0m
-[33m[your-program] [0m[0m[2] 202[0m
-[33m[tester::#RQ2] [0m[92m✓ Found process with PID 202[0m
-[33m[tester::#RQ2] [0m[92m✓ Expected executable path found for process with PID 202[0m
+[33m[your-program] [0m[0m$ cat /tmp/blueberry-94 &[0m
+[33m[your-program] [0m[0m[2] 220[0m
+[33m[tester::#RQ2] [0m[92m✓ Found process with PID 220[0m
+[33m[tester::#RQ2] [0m[92m✓ Expected executable path found for process with PID 220[0m
 [33m[tester::#RQ2] [0m[92m✓ Output includes job number with PID[0m
-[33m[your-program] [0m[0m$ cat /tmp/mango-48 &[0m
-[33m[your-program] [0m[0m[3] 204[0m
-[33m[tester::#RQ2] [0m[92m✓ Found process with PID 204[0m
-[33m[tester::#RQ2] [0m[92m✓ Expected executable path found for process with PID 204[0m
+[33m[your-program] [0m[0m$ cat /tmp/raspberry-27 &[0m
+[33m[your-program] [0m[0m[3] 222[0m
+[33m[tester::#RQ2] [0m[92m✓ Found process with PID 222[0m
+[33m[tester::#RQ2] [0m[92m✓ Expected executable path found for process with PID 222[0m
 [33m[tester::#RQ2] [0m[92m✓ Output includes job number with PID[0m
-[33m[tester::#RQ2] [setup] [0m[94mecho -ne "" > "/tmp/pineapple-70"[0m
+[33m[tester::#RQ2] [setup] [0m[94mecho -ne "" > "/tmp/blueberry-94"[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]   Running                 sleep 500 &[0m
-[33m[your-program] [0m[0m[2]-  Done                    cat /tmp/pineapple-70[0m
-[33m[your-program] [0m[0m[3]+  Running                 cat /tmp/mango-48 &[0m
+[33m[your-program] [0m[0m[2]-  Done                    cat /tmp/blueberry-94[0m
+[33m[your-program] [0m[0m[3]+  Running                 cat /tmp/raspberry-27 &[0m
 [33m[tester::#RQ2] [0m[92m✓ Received 3 entries in the output[0m
-[33m[tester::#RQ2] [setup] [0m[94mecho -ne "" > "/tmp/mango-48"[0m
+[33m[tester::#RQ2] [setup] [0m[94mecho -ne "" > "/tmp/raspberry-27"[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]-  Running                 sleep 500 &[0m
-[33m[your-program] [0m[0m[3]+  Done                    cat /tmp/mango-48[0m
+[33m[your-program] [0m[0m[3]+  Done                    cat /tmp/raspberry-27[0m
 [33m[tester::#RQ2] [0m[92m✓ Received 2 entries in the output[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]+  Running                 sleep 500 &[0m
@@ -148,18 +160,18 @@ Running tests on your code. Logs should appear shortly...
 
 [33m[tester::#MA9] [0m[94mRunning tests for Stage #MA9 (Background Jobs - Reap one job)[0m
 [33m[tester::#MA9] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#MA9] [setup] [0m[94mmkfifo /tmp/strawberry-60[0m
-[33m[your-program] [0m[0m$ cat /tmp/strawberry-60 &[0m
-[33m[your-program] [0m[0m[1] 219[0m
-[33m[tester::#MA9] [0m[92m✓ Found process with PID 219[0m
-[33m[tester::#MA9] [0m[92m✓ Expected executable path found for process with PID 219[0m
+[33m[tester::#MA9] [setup] [0m[94mmkfifo /tmp/grape-37[0m
+[33m[your-program] [0m[0m$ cat /tmp/grape-37 &[0m
+[33m[your-program] [0m[0m[1] 237[0m
+[33m[tester::#MA9] [0m[92m✓ Found process with PID 237[0m
+[33m[tester::#MA9] [0m[92m✓ Expected executable path found for process with PID 237[0m
 [33m[tester::#MA9] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
-[33m[your-program] [0m[0m[1]+  Running                 cat /tmp/strawberry-60 &[0m
+[33m[your-program] [0m[0m[1]+  Running                 cat /tmp/grape-37 &[0m
 [33m[tester::#MA9] [0m[92m✓ 1 entry matches the running job[0m
-[33m[tester::#MA9] [setup] [0m[94mecho -ne "" > "/tmp/strawberry-60"[0m
+[33m[tester::#MA9] [setup] [0m[94mecho -ne "" > "/tmp/grape-37"[0m
 [33m[your-program] [0m[0m$ jobs[0m
-[33m[your-program] [0m[0m[1]+  Done                    cat /tmp/strawberry-60[0m
+[33m[your-program] [0m[0m[1]+  Done                    cat /tmp/grape-37[0m
 [33m[tester::#MA9] [0m[92m✓ 1 entry matches the finished job[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[tester::#MA9] [0m[92m✓ No jobs[0m
@@ -169,26 +181,26 @@ Running tests on your code. Logs should appear shortly...
 [33m[tester::#DK5] [0m[94mRunning tests for Stage #DK5 (Background Jobs - List multiple jobs)[0m
 [33m[tester::#DK5] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ sleep 100 &[0m
-[33m[your-program] [0m[0m[1] 234[0m
-[33m[tester::#DK5] [0m[92m✓ Found process with PID 234[0m
-[33m[tester::#DK5] [0m[92m✓ Expected executable path found for process with PID 234[0m
+[33m[your-program] [0m[0m[1] 252[0m
+[33m[tester::#DK5] [0m[92m✓ Found process with PID 252[0m
+[33m[tester::#DK5] [0m[92m✓ Expected executable path found for process with PID 252[0m
 [33m[tester::#DK5] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]+  Running                 sleep 100 &[0m
 [33m[tester::#DK5] [0m[92m✓ 1 entry match the running job[0m
 [33m[your-program] [0m[0m$ sleep 200 &[0m
-[33m[your-program] [0m[0m[2] 236[0m
-[33m[tester::#DK5] [0m[92m✓ Found process with PID 236[0m
-[33m[tester::#DK5] [0m[92m✓ Expected executable path found for process with PID 236[0m
+[33m[your-program] [0m[0m[2] 254[0m
+[33m[tester::#DK5] [0m[92m✓ Found process with PID 254[0m
+[33m[tester::#DK5] [0m[92m✓ Expected executable path found for process with PID 254[0m
 [33m[tester::#DK5] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]-  Running                 sleep 100 &[0m
 [33m[your-program] [0m[0m[2]+  Running                 sleep 200 &[0m
 [33m[tester::#DK5] [0m[92m✓ 2 entries match the running jobs[0m
 [33m[your-program] [0m[0m$ sleep 300 &[0m
-[33m[your-program] [0m[0m[3] 238[0m
-[33m[tester::#DK5] [0m[92m✓ Found process with PID 238[0m
-[33m[tester::#DK5] [0m[92m✓ Expected executable path found for process with PID 238[0m
+[33m[your-program] [0m[0m[3] 256[0m
+[33m[tester::#DK5] [0m[92m✓ Found process with PID 256[0m
+[33m[tester::#DK5] [0m[92m✓ Expected executable path found for process with PID 256[0m
 [33m[tester::#DK5] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]   Running                 sleep 100 &[0m
@@ -201,9 +213,9 @@ Running tests on your code. Logs should appear shortly...
 [33m[tester::#JD6] [0m[94mRunning tests for Stage #JD6 (Background Jobs - List a single job)[0m
 [33m[tester::#JD6] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ sleep 100 &[0m
-[33m[your-program] [0m[0m[1] 253[0m
-[33m[tester::#JD6] [0m[92m✓ Found process with PID 253[0m
-[33m[tester::#JD6] [0m[92m✓ Expected executable path found for process with PID 253[0m
+[33m[your-program] [0m[0m[1] 271[0m
+[33m[tester::#JD6] [0m[92m✓ Found process with PID 271[0m
+[33m[tester::#JD6] [0m[92m✓ Expected executable path found for process with PID 271[0m
 [33m[tester::#JD6] [0m[92m✓ Output includes job number with PID[0m
 [33m[your-program] [0m[0m$ jobs[0m
 [33m[your-program] [0m[0m[1]+  Running                 sleep 100 &[0m
@@ -213,30 +225,30 @@ Running tests on your code. Logs should appear shortly...
 
 [33m[tester::#SI2] [0m[94mRunning tests for Stage #SI2 (Background Jobs - Printing background job output)[0m
 [33m[tester::#SI2] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#SI2] [setup] [0m[94mmkfifo /tmp/pineapple-21[0m
-[33m[tester::#SI2] [setup] [0m[94mmkfifo /tmp/orange-30[0m
-[33m[your-program] [0m[0m$ cat /tmp/pineapple-21 &[0m
-[33m[your-program] [0m[0m[1] 268[0m
-[33m[tester::#SI2] [0m[92m✓ Found process with PID 268[0m
-[33m[tester::#SI2] [0m[92m✓ Expected executable path found for process with PID 268[0m
+[33m[tester::#SI2] [setup] [0m[94mmkfifo /tmp/mango-22[0m
+[33m[tester::#SI2] [setup] [0m[94mmkfifo /tmp/raspberry-26[0m
+[33m[your-program] [0m[0m$ cat /tmp/mango-22 &[0m
+[33m[your-program] [0m[0m[1] 286[0m
+[33m[tester::#SI2] [0m[92m✓ Found process with PID 286[0m
+[33m[tester::#SI2] [0m[92m✓ Expected executable path found for process with PID 286[0m
 [33m[tester::#SI2] [0m[92m✓ Received next prompt[0m
-[33m[your-program] [0m[0m$ cat /tmp/orange-30[0m
-[33m[tester::#SI2] [setup] [0m[94mecho -e "Hello from FIFO #1" > "/tmp/pineapple-21"[0m
+[33m[your-program] [0m[0m$ cat /tmp/raspberry-26[0m
+[33m[tester::#SI2] [setup] [0m[94mecho -e "Hello from FIFO #1" > "/tmp/mango-22"[0m
 [33m[your-program] [0m[0mHello from FIFO #1[0m
-[33m[tester::#SI2] [0m[92m✓ Received output from background job 'cat /tmp/pineapple-21'[0m
-[33m[tester::#SI2] [setup] [0m[94mecho -e "Hello from FIFO #2" > "/tmp/orange-30"[0m
+[33m[tester::#SI2] [0m[92m✓ Received output from background job 'cat /tmp/mango-22'[0m
+[33m[tester::#SI2] [setup] [0m[94mecho -e "Hello from FIFO #2" > "/tmp/raspberry-26"[0m
 [33m[your-program] [0m[0mHello from FIFO #2[0m
-[33m[tester::#SI2] [0m[92m✓ Received output from foreground job 'cat /tmp/orange-30'[0m
-[33m[your-program] [0m[0m[1]+  Done                    cat /tmp/pineapple-21[0m
+[33m[tester::#SI2] [0m[92m✓ Received output from foreground job 'cat /tmp/raspberry-26'[0m
+[33m[your-program] [0m[0m[1]+  Done                    cat /tmp/mango-22[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#SI2] [0m[92mTest passed.[0m
 
 [33m[tester::#AT7] [0m[94mRunning tests for Stage #AT7 (Background Jobs - Starting background jobs)[0m
 [33m[tester::#AT7] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ sleep 500 &[0m
-[33m[your-program] [0m[0m[1] 285[0m
-[33m[tester::#AT7] [0m[92m✓ Found process with PID 285[0m
-[33m[tester::#AT7] [0m[92m✓ Expected executable path found for process with PID 285[0m
+[33m[your-program] [0m[0m[1] 303[0m
+[33m[tester::#AT7] [0m[92m✓ Found process with PID 303[0m
+[33m[tester::#AT7] [0m[92m✓ Expected executable path found for process with PID 303[0m
 [33m[tester::#AT7] [0m[92m✓ Received next prompt[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#AT7] [0m[92mTest passed.[0m
@@ -252,22 +264,22 @@ Running tests on your code. Logs should appear shortly...
 [33m[tester::#AF3] [0m[92mTest passed.[0m
 
 [33m[tester::#UN3] [0m[94mRunning tests for Stage #UN3 (Redirection - Append stderr)[0m
-[33m[tester::#UN3] [setup] [0m[94mexport PATH=/tmp/strawberry/raspberry/blueberry:$PATH[0m
+[33m[tester::#UN3] [setup] [0m[94mexport PATH=/tmp/pear/grape/orange:$PATH[0m
 [33m[tester::#UN3] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ ls -1 nonexistent >> /tmp/rat/bee.md[0m
+[33m[your-program] [0m[0m$ ls -1 nonexistent >> /tmp/bee/cow.md[0m
 [33m[your-program] [0m[0mls: nonexistent: No such file or directory[0m
 [33m[tester::#UN3] [0m[92m✓ Received error message[0m
-[33m[tester::#UN3] [0m[92m✓ File: /tmp/rat/bee.md is empty[0m
-[33m[your-program] [0m[0m$ ls -1 nonexistent 2>> /tmp/rat/fox.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/rat/fox.md[0m
+[33m[tester::#UN3] [0m[92m✓ File: /tmp/bee/cow.md is empty[0m
+[33m[your-program] [0m[0m$ ls -1 nonexistent 2>> /tmp/bee/owl.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/bee/owl.md[0m
 [33m[your-program] [0m[0mls: nonexistent: No such file or directory[0m
 [33m[tester::#UN3] [0m[92m✓ Received redirected file content[0m
-[33m[your-program] [0m[0m$ echo Maria says Error 2>> /tmp/rat/owl.md[0m
-[33m[your-program] [0m[0mMaria says Error[0m
+[33m[your-program] [0m[0m$ echo David says Error 2>> /tmp/bee/rat.md[0m
+[33m[your-program] [0m[0mDavid says Error[0m
 [33m[tester::#UN3] [0m[92m✓ Received redirected file content[0m
-[33m[your-program] [0m[0m$ cat nonexistent 2>> /tmp/rat/owl.md[0m
-[33m[your-program] [0m[0m$ ls -1 nonexistent 2>> /tmp/rat/owl.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/rat/owl.md[0m
+[33m[your-program] [0m[0m$ cat nonexistent 2>> /tmp/bee/rat.md[0m
+[33m[your-program] [0m[0m$ ls -1 nonexistent 2>> /tmp/bee/rat.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/bee/rat.md[0m
 [33m[your-program] [0m[0mcat: nonexistent: No such file or directory[0m
 [33m[your-program] [0m[0mls: nonexistent: No such file or directory[0m
 [33m[tester::#UN3] [0m[92m✓ Received redirected file content[0m
@@ -275,234 +287,234 @@ Running tests on your code. Logs should appear shortly...
 [33m[tester::#UN3] [0m[92mTest passed.[0m
 
 [33m[tester::#EL9] [0m[94mRunning tests for Stage #EL9 (Redirection - Append stdout)[0m
-[33m[tester::#EL9] [setup] [0m[94mexport PATH=/tmp/banana/mango/banana:$PATH[0m
+[33m[tester::#EL9] [setup] [0m[94mexport PATH=/tmp/blueberry/mango/mango:$PATH[0m
 [33m[tester::#EL9] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#EL9] [setup] [0m[94mecho "blueberry" > "/tmp/owl/blueberry"[0m
-[33m[tester::#EL9] [setup] [0m[94mecho "grape" > "/tmp/owl/grape"[0m
-[33m[tester::#EL9] [setup] [0m[94mecho "raspberry" > "/tmp/owl/raspberry"[0m
-[33m[your-program] [0m[0m$ ls -1 /tmp/owl >> /tmp/bee/ant.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/bee/ant.md[0m
-[33m[your-program] [0m[0mblueberry[0m
+[33m[tester::#EL9] [setup] [0m[94mecho "grape" > "/tmp/pig/grape"[0m
+[33m[tester::#EL9] [setup] [0m[94mecho "mango" > "/tmp/pig/mango"[0m
+[33m[tester::#EL9] [setup] [0m[94mecho "pear" > "/tmp/pig/pear"[0m
+[33m[your-program] [0m[0m$ ls -1 /tmp/pig >> /tmp/rat/ant.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/rat/ant.md[0m
 [33m[your-program] [0m[0mgrape[0m
-[33m[your-program] [0m[0mraspberry[0m
+[33m[your-program] [0m[0mmango[0m
+[33m[your-program] [0m[0mpear[0m
 [33m[tester::#EL9] [0m[92m✓ Received redirected file content[0m
-[33m[your-program] [0m[0m$ echo Hello Emily 1>> /tmp/bee/fox.md[0m
-[33m[your-program] [0m[0m$ echo Hello Emily 1>> /tmp/bee/fox.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/bee/fox.md[0m
-[33m[your-program] [0m[0mHello Emily[0m
-[33m[your-program] [0m[0mHello Emily[0m
+[33m[your-program] [0m[0m$ echo Hello James 1>> /tmp/rat/cow.md[0m
+[33m[your-program] [0m[0m$ echo Hello James 1>> /tmp/rat/cow.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/rat/cow.md[0m
+[33m[your-program] [0m[0mHello James[0m
+[33m[your-program] [0m[0mHello James[0m
 [33m[tester::#EL9] [0m[92m✓ Received redirected file content[0m
-[33m[your-program] [0m[0m$ echo List of files: > /tmp/bee/rat.md[0m
-[33m[your-program] [0m[0m$ ls -1 /tmp/owl >> /tmp/bee/rat.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/bee/rat.md[0m
+[33m[your-program] [0m[0m$ echo List of files: > /tmp/rat/pig.md[0m
+[33m[your-program] [0m[0m$ ls -1 /tmp/pig >> /tmp/rat/pig.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/rat/pig.md[0m
 [33m[your-program] [0m[0mList of files:[0m
-[33m[your-program] [0m[0mblueberry[0m
 [33m[your-program] [0m[0mgrape[0m
-[33m[your-program] [0m[0mraspberry[0m
+[33m[your-program] [0m[0mmango[0m
+[33m[your-program] [0m[0mpear[0m
 [33m[tester::#EL9] [0m[92m✓ Received redirected file content[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#EL9] [0m[92mTest passed.[0m
 
 [33m[tester::#VZ4] [0m[94mRunning tests for Stage #VZ4 (Redirection - Redirect stderr)[0m
-[33m[tester::#VZ4] [setup] [0m[94mexport PATH=/tmp/pineapple/banana/apple:$PATH[0m
+[33m[tester::#VZ4] [setup] [0m[94mexport PATH=/tmp/strawberry/mango/apple:$PATH[0m
 [33m[tester::#VZ4] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#VZ4] [setup] [0m[94mecho "apple" > "/tmp/pig/apple"[0m
-[33m[your-program] [0m[0m$ ls -1 nonexistent 2> /tmp/ant/ant.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/ant/ant.md[0m
+[33m[tester::#VZ4] [setup] [0m[94mecho "grape" > "/tmp/owl/grape"[0m
+[33m[your-program] [0m[0m$ ls -1 nonexistent 2> /tmp/bee/ant.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/bee/ant.md[0m
 [33m[your-program] [0m[0mls: nonexistent: No such file or directory[0m
 [33m[tester::#VZ4] [0m[92m✓ Received redirected error message[0m
-[33m[your-program] [0m[0m$ echo Emily file cannot be found 2> /tmp/ant/bee.md[0m
-[33m[your-program] [0m[0mEmily file cannot be found[0m
+[33m[your-program] [0m[0m$ echo James file cannot be found 2> /tmp/bee/bee.md[0m
+[33m[your-program] [0m[0mJames file cannot be found[0m
 [33m[tester::#VZ4] [0m[92m✓ Received expected response[0m
-[33m[tester::#VZ4] [0m[92m✓ File: /tmp/ant/bee.md is empty[0m
-[33m[your-program] [0m[0m$ cat /tmp/pig/apple nonexistent 2> /tmp/ant/owl.md[0m
-[33m[your-program] [0m[0mapple[0m
+[33m[tester::#VZ4] [0m[92m✓ File: /tmp/bee/bee.md is empty[0m
+[33m[your-program] [0m[0m$ cat /tmp/owl/grape nonexistent 2> /tmp/bee/dog.md[0m
+[33m[your-program] [0m[0mgrape[0m
 [33m[tester::#VZ4] [0m[92m✓ Received file content[0m
-[33m[your-program] [0m[0m$ cat /tmp/ant/owl.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/bee/dog.md[0m
 [33m[your-program] [0m[0mcat: nonexistent: No such file or directory[0m
 [33m[tester::#VZ4] [0m[92m✓ Received redirected error message[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#VZ4] [0m[92mTest passed.[0m
 
 [33m[tester::#JV1] [0m[94mRunning tests for Stage #JV1 (Redirection - Redirect stdout)[0m
-[33m[tester::#JV1] [setup] [0m[94mexport PATH=/tmp/grape/strawberry/grape:$PATH[0m
+[33m[tester::#JV1] [setup] [0m[94mexport PATH=/tmp/apple/raspberry/blueberry:$PATH[0m
 [33m[tester::#JV1] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#JV1] [setup] [0m[94mecho "grape" > "/tmp/ant/grape"[0m
-[33m[tester::#JV1] [setup] [0m[94mecho "mango" > "/tmp/ant/mango"[0m
-[33m[tester::#JV1] [setup] [0m[94mecho "strawberry" > "/tmp/ant/strawberry"[0m
-[33m[your-program] [0m[0m$ ls -1 /tmp/ant > /tmp/bee/dog.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/bee/dog.md[0m
-[33m[your-program] [0m[0mgrape[0m
-[33m[your-program] [0m[0mmango[0m
-[33m[your-program] [0m[0mstrawberry[0m
+[33m[tester::#JV1] [setup] [0m[94mecho "apple" > "/tmp/dog/apple"[0m
+[33m[tester::#JV1] [setup] [0m[94mecho "blueberry" > "/tmp/dog/blueberry"[0m
+[33m[tester::#JV1] [setup] [0m[94mecho "pineapple" > "/tmp/dog/pineapple"[0m
+[33m[your-program] [0m[0m$ ls -1 /tmp/dog > /tmp/fox/dog.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/fox/dog.md[0m
+[33m[your-program] [0m[0mapple[0m
+[33m[your-program] [0m[0mblueberry[0m
+[33m[your-program] [0m[0mpineapple[0m
 [33m[tester::#JV1] [0m[92m✓ Received redirected file content[0m
-[33m[your-program] [0m[0m$ echo Hello Emily 1> /tmp/bee/fox.md[0m
-[33m[your-program] [0m[0m$ cat /tmp/bee/fox.md[0m
-[33m[your-program] [0m[0mHello Emily[0m
+[33m[your-program] [0m[0m$ echo Hello David 1> /tmp/fox/fox.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/fox/fox.md[0m
+[33m[your-program] [0m[0mHello David[0m
 [33m[tester::#JV1] [0m[92m✓ Received redirected file content[0m
-[33m[your-program] [0m[0m$ cat /tmp/ant/mango nonexistent 1> /tmp/bee/pig.md[0m
+[33m[your-program] [0m[0m$ cat /tmp/dog/blueberry nonexistent 1> /tmp/fox/owl.md[0m
 [33m[your-program] [0m[0mcat: nonexistent: No such file or directory[0m
 [33m[tester::#JV1] [0m[92m✓ Received error message[0m
-[33m[your-program] [0m[0m$ cat /tmp/bee/pig.md[0m
-[33m[your-program] [0m[0mmango[0m
+[33m[your-program] [0m[0m$ cat /tmp/fox/owl.md[0m
+[33m[your-program] [0m[0mblueberry[0m
 [33m[tester::#JV1] [0m[92m✓ Received redirected file content[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#JV1] [0m[92mTest passed.[0m
 
 [33m[tester::#QJ0] [0m[94mRunning tests for Stage #QJ0 (Quoting - Executing a quoted executable)[0m
-[33m[tester::#QJ0] [setup] [0m[94mexport PATH=/tmp/cow:$PATH[0m
+[33m[tester::#QJ0] [setup] [0m[94mexport PATH=/tmp/bee:$PATH[0m
 [33m[tester::#QJ0] [setup] [0m[94mAvailable executables:[0m
 [33m[tester::#QJ0] [setup] [0m[94m- 'exe  with  space'[0m
 [33m[tester::#QJ0] [setup] [0m[94m- 'exe with "quotes"'[0m
 [33m[tester::#QJ0] [setup] [0m[94m- "exe with 'single quotes'"[0m
 [33m[tester::#QJ0] [setup] [0m[94m- "exe with \\ backslash"[0m
 [33m[tester::#QJ0] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#QJ0] [setup] [0m[94mecho "mango apple." > "/tmp/cow/f1"[0m
-[33m[tester::#QJ0] [setup] [0m[94mecho "grape pear." > "/tmp/cow/f2"[0m
-[33m[tester::#QJ0] [setup] [0m[94mecho "pineapple raspberry." > "/tmp/cow/f3"[0m
-[33m[tester::#QJ0] [setup] [0m[94mecho "banana pineapple." > "/tmp/cow/f4"[0m
-[33m[your-program] [0m[0m$ 'exe  with  space' /tmp/cow/f1[0m
-[33m[your-program] [0m[0mmango apple.[0m
+[33m[tester::#QJ0] [setup] [0m[94mecho "apple raspberry." > "/tmp/bee/f1"[0m
+[33m[tester::#QJ0] [setup] [0m[94mecho "apple mango." > "/tmp/bee/f2"[0m
+[33m[tester::#QJ0] [setup] [0m[94mecho "apple strawberry." > "/tmp/bee/f3"[0m
+[33m[tester::#QJ0] [setup] [0m[94mecho "mango grape." > "/tmp/bee/f4"[0m
+[33m[your-program] [0m[0m$ 'exe  with  space' /tmp/bee/f1[0m
+[33m[your-program] [0m[0mapple raspberry.[0m
 [33m[tester::#QJ0] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ 'exe with "quotes"' /tmp/cow/f2[0m
-[33m[your-program] [0m[0mgrape pear.[0m
+[33m[your-program] [0m[0m$ 'exe with "quotes"' /tmp/bee/f2[0m
+[33m[your-program] [0m[0mapple mango.[0m
 [33m[tester::#QJ0] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ "exe with 'single quotes'" /tmp/cow/f3[0m
-[33m[your-program] [0m[0mpineapple raspberry.[0m
+[33m[your-program] [0m[0m$ "exe with 'single quotes'" /tmp/bee/f3[0m
+[33m[your-program] [0m[0mapple strawberry.[0m
 [33m[tester::#QJ0] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ "exe with \\ backslash" /tmp/cow/f4[0m
-[33m[your-program] [0m[0mbanana pineapple.[0m
+[33m[your-program] [0m[0m$ "exe with \\ backslash" /tmp/bee/f4[0m
+[33m[your-program] [0m[0mmango grape.[0m
 [33m[tester::#QJ0] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#QJ0] [0m[92mTest passed.[0m
 
 [33m[tester::#GU3] [0m[94mRunning tests for Stage #GU3 (Quoting - Backslash within double quotes)[0m
-[33m[tester::#GU3] [setup] [0m[94mexport PATH=/tmp/apple/raspberry/banana:$PATH[0m
-[33m[tester::#GU3] [setup] [0m[94mecho -n "banana orange." > "/tmp/bee/number 67"[0m
-[33m[tester::#GU3] [setup] [0m[94mecho -n "pineapple grape." > "/tmp/bee/doublequote \" 88"[0m
-[33m[tester::#GU3] [setup] [0m[94mecho "banana strawberry." > "/tmp/bee/backslash \\ 85"[0m
+[33m[tester::#GU3] [setup] [0m[94mexport PATH=/tmp/pineapple/grape/mango:$PATH[0m
+[33m[tester::#GU3] [setup] [0m[94mecho -n "pear blueberry." > "/tmp/owl/number 92"[0m
+[33m[tester::#GU3] [setup] [0m[94mecho -n "pineapple strawberry." > "/tmp/owl/doublequote \" 95"[0m
+[33m[tester::#GU3] [setup] [0m[94mecho "orange apple." > "/tmp/owl/backslash \\ 5"[0m
 [33m[tester::#GU3] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ echo "script'hello'\\'shell"[0m
-[33m[your-program] [0m[0mscript'hello'\'shell[0m
+[33m[your-program] [0m[0m$ echo "shell'world'\\'example"[0m
+[33m[your-program] [0m[0mshell'world'\'example[0m
 [33m[tester::#GU3] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo "script\"insidequotes"hello\"[0m
-[33m[your-program] [0m[0mscript"insidequoteshello"[0m
+[33m[your-program] [0m[0m$ echo "shell\"insidequotes"world\"[0m
+[33m[your-program] [0m[0mshell"insidequotesworld"[0m
 [33m[tester::#GU3] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo "mixed\"quote'test'\\"[0m
-[33m[your-program] [0m[0mmixed"quote'test'\[0m
+[33m[your-program] [0m[0m$ echo "mixed\"quote'hello'\\"[0m
+[33m[your-program] [0m[0mmixed"quote'hello'\[0m
 [33m[tester::#GU3] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ cat /tmp/bee/"number 67" /tmp/bee/"doublequote \" 88" /tmp/bee/"backslash \\ 85"[0m
-[33m[your-program] [0m[0mbanana orange.pineapple grape.banana strawberry.[0m
+[33m[your-program] [0m[0m$ cat /tmp/owl/"number 92" /tmp/owl/"doublequote \" 95" /tmp/owl/"backslash \\ 5"[0m
+[33m[your-program] [0m[0mpear blueberry.pineapple strawberry.orange apple.[0m
 [33m[tester::#GU3] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#GU3] [0m[92mTest passed.[0m
 
 [33m[tester::#LE5] [0m[94mRunning tests for Stage #LE5 (Quoting - Backslash within single quotes)[0m
-[33m[tester::#LE5] [setup] [0m[94mexport PATH=/tmp/raspberry/blueberry/pear:$PATH[0m
+[33m[tester::#LE5] [setup] [0m[94mexport PATH=/tmp/pineapple/apple/raspberry:$PATH[0m
 [33m[tester::#LE5] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#LE5] [setup] [0m[94mecho -n "mango grape." > "/tmp/rat/no slash 60"[0m
-[33m[tester::#LE5] [setup] [0m[94mecho -n "raspberry blueberry." > "/tmp/rat/one slash \\86"[0m
-[33m[tester::#LE5] [setup] [0m[94mecho "strawberry orange." > "/tmp/rat/two slashes \\15\\"[0m
-[33m[your-program] [0m[0m$ echo 'hello\\nworld'[0m
-[33m[your-program] [0m[0mhello\\nworld[0m
+[33m[tester::#LE5] [setup] [0m[94mecho -n "raspberry grape." > "/tmp/cow/no slash 52"[0m
+[33m[tester::#LE5] [setup] [0m[94mecho -n "mango pear." > "/tmp/cow/one slash \\14"[0m
+[33m[tester::#LE5] [setup] [0m[94mecho "pear apple." > "/tmp/cow/two slashes \\26\\"[0m
+[33m[your-program] [0m[0m$ echo 'world\\nexample'[0m
+[33m[your-program] [0m[0mworld\\nexample[0m
 [33m[tester::#LE5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo 'example\"shellscript\"hello'[0m
-[33m[your-program] [0m[0mexample\"shellscript\"hello[0m
+[33m[your-program] [0m[0m$ echo 'test\"scripthello\"world'[0m
+[33m[your-program] [0m[0mtest\"scripthello\"world[0m
 [33m[tester::#LE5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo 'script\\nworld'[0m
-[33m[your-program] [0m[0mscript\\nworld[0m
+[33m[your-program] [0m[0m$ echo 'hello\\nexample'[0m
+[33m[your-program] [0m[0mhello\\nexample[0m
 [33m[tester::#LE5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ cat /tmp/rat/'no slash 60' /tmp/rat/'one slash \86' /tmp/rat/'two slashes \15\'[0m
-[33m[your-program] [0m[0mmango grape.raspberry blueberry.strawberry orange.[0m
+[33m[your-program] [0m[0m$ cat /tmp/cow/'no slash 52' /tmp/cow/'one slash \14' /tmp/cow/'two slashes \26\'[0m
+[33m[your-program] [0m[0mraspberry grape.mango pear.pear apple.[0m
 [33m[tester::#LE5] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#LE5] [0m[92mTest passed.[0m
 
 [33m[tester::#YT5] [0m[94mRunning tests for Stage #YT5 (Quoting - Backslash outside quotes)[0m
-[33m[tester::#YT5] [setup] [0m[94mexport PATH=/tmp/orange/pear/orange:$PATH[0m
-[33m[tester::#YT5] [setup] [0m[94mecho -n "apple pear." > "/tmp/fox/_ignored_32"[0m
-[33m[tester::#YT5] [setup] [0m[94mecho -n "orange apple." > "/tmp/fox/ignore_52"[0m
-[33m[tester::#YT5] [setup] [0m[94mecho "apple orange." > "/tmp/fox/just_one_\\_42"[0m
+[33m[tester::#YT5] [setup] [0m[94mexport PATH=/tmp/blueberry/raspberry/banana:$PATH[0m
+[33m[tester::#YT5] [setup] [0m[94mecho -n "apple grape." > "/tmp/dog/_ignored_20"[0m
+[33m[tester::#YT5] [setup] [0m[94mecho -n "mango grape." > "/tmp/dog/ignore_55"[0m
+[33m[tester::#YT5] [setup] [0m[94mecho "orange mango." > "/tmp/dog/just_one_\\_51"[0m
 [33m[tester::#YT5] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ echo world\ \ \ \ \ \ script[0m
 [33m[your-program] [0m[0mworld      script[0m
 [33m[tester::#YT5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo \'\"script hello\"\'[0m
-[33m[your-program] [0m[0m'"script hello"'[0m
+[33m[your-program] [0m[0m$ echo \'\"script test\"\'[0m
+[33m[your-program] [0m[0m'"script test"'[0m
 [33m[tester::#YT5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo hello\ntest[0m
-[33m[your-program] [0m[0mhellontest[0m
+[33m[your-program] [0m[0m$ echo test\nhello[0m
+[33m[your-program] [0m[0mtestnhello[0m
 [33m[tester::#YT5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ cat /tmp/fox/\_ignored_32 /tmp/fox/ignore_\52 /tmp/fox/just_one_\\_42[0m
-[33m[your-program] [0m[0mapple pear.orange apple.apple orange.[0m
+[33m[your-program] [0m[0m$ cat /tmp/dog/\_ignored_20 /tmp/dog/ignore_\55 /tmp/dog/just_one_\\_51[0m
+[33m[your-program] [0m[0mapple grape.mango grape.orange mango.[0m
 [33m[tester::#YT5] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#YT5] [0m[92mTest passed.[0m
 
 [33m[tester::#TG6] [0m[94mRunning tests for Stage #TG6 (Quoting - Double quotes)[0m
-[33m[tester::#TG6] [setup] [0m[94mexport PATH=/tmp/apple/mango/pear:$PATH[0m
+[33m[tester::#TG6] [setup] [0m[94mexport PATH=/tmp/pineapple/blueberry/strawberry:$PATH[0m
 [33m[tester::#TG6] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ echo "script example"[0m
-[33m[your-program] [0m[0mscript example[0m
+[33m[your-program] [0m[0m$ echo "hello test"[0m
+[33m[your-program] [0m[0mhello test[0m
 [33m[tester::#TG6] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo "example  hello"  "shell""script"[0m
-[33m[your-program] [0m[0mexample  hello shellscript[0m
+[33m[your-program] [0m[0m$ echo "test  shell"  "script""hello"[0m
+[33m[your-program] [0m[0mtest  shell scripthello[0m
 [33m[tester::#TG6] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo "shell"  "test's"  example""hello[0m
-[33m[your-program] [0m[0mshell test's examplehello[0m
+[33m[your-program] [0m[0m$ echo "script"  "world's"  test""shell[0m
+[33m[your-program] [0m[0mscript world's testshell[0m
 [33m[tester::#TG6] [0m[92m✓ Received expected response[0m
-[33m[tester::#TG6] [setup] [0m[94mecho -n "mango raspberry." > "/tmp/owl/f 56"[0m
-[33m[tester::#TG6] [setup] [0m[94mecho -n "grape pineapple." > "/tmp/owl/f   43"[0m
-[33m[tester::#TG6] [setup] [0m[94mecho "raspberry pineapple." > "/tmp/owl/f's47"[0m
-[33m[your-program] [0m[0m$ cat "/tmp/owl/f 56" "/tmp/owl/f   43" "/tmp/owl/f's47"[0m
-[33m[your-program] [0m[0mmango raspberry.grape pineapple.raspberry pineapple.[0m
+[33m[tester::#TG6] [setup] [0m[94mecho -n "apple grape." > "/tmp/dog/f 63"[0m
+[33m[tester::#TG6] [setup] [0m[94mecho -n "strawberry pear." > "/tmp/dog/f   13"[0m
+[33m[tester::#TG6] [setup] [0m[94mecho "pineapple orange." > "/tmp/dog/f's57"[0m
+[33m[your-program] [0m[0m$ cat "/tmp/dog/f 63" "/tmp/dog/f   13" "/tmp/dog/f's57"[0m
+[33m[your-program] [0m[0mapple grape.strawberry pear.pineapple orange.[0m
 [33m[tester::#TG6] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#TG6] [0m[92mTest passed.[0m
 
 [33m[tester::#NI6] [0m[94mRunning tests for Stage #NI6 (Quoting - Single quotes)[0m
-[33m[tester::#NI6] [setup] [0m[94mexport PATH=/tmp/apple/blueberry/raspberry:$PATH[0m
+[33m[tester::#NI6] [setup] [0m[94mexport PATH=/tmp/pear/raspberry/raspberry:$PATH[0m
 [33m[tester::#NI6] [0m[94mRunning ./your_program.sh[0m
-[33m[tester::#NI6] [setup] [0m[94mecho -n "orange grape." > "/tmp/ant/f   9"[0m
-[33m[tester::#NI6] [setup] [0m[94mecho -n "raspberry orange." > "/tmp/ant/f   90"[0m
-[33m[tester::#NI6] [setup] [0m[94mecho "raspberry blueberry." > "/tmp/ant/f   66"[0m
-[33m[your-program] [0m[0m$ echo 'world test'[0m
-[33m[your-program] [0m[0mworld test[0m
+[33m[tester::#NI6] [setup] [0m[94mecho -n "grape apple." > "/tmp/bee/f   48"[0m
+[33m[tester::#NI6] [setup] [0m[94mecho -n "pineapple orange." > "/tmp/bee/f   70"[0m
+[33m[tester::#NI6] [setup] [0m[94mecho "raspberry banana." > "/tmp/bee/f   95"[0m
+[33m[your-program] [0m[0m$ echo 'hello example'[0m
+[33m[your-program] [0m[0mhello example[0m
 [33m[tester::#NI6] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo test     example[0m
-[33m[your-program] [0m[0mtest example[0m
+[33m[your-program] [0m[0m$ echo example     test[0m
+[33m[your-program] [0m[0mexample test[0m
 [33m[tester::#NI6] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo 'hello     shell' 'example''world' test''script[0m
-[33m[your-program] [0m[0mhello     shell exampleworld testscript[0m
+[33m[your-program] [0m[0m$ echo 'script     shell' 'test''hello' example''world[0m
+[33m[your-program] [0m[0mscript     shell testhello exampleworld[0m
 [33m[tester::#NI6] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ cat '/tmp/ant/f   9' '/tmp/ant/f   90' '/tmp/ant/f   66'[0m
-[33m[your-program] [0m[0morange grape.raspberry orange.raspberry blueberry.[0m
+[33m[your-program] [0m[0m$ cat '/tmp/bee/f   48' '/tmp/bee/f   70' '/tmp/bee/f   95'[0m
+[33m[your-program] [0m[0mgrape apple.pineapple orange.raspberry banana.[0m
 [33m[tester::#NI6] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#NI6] [0m[92mTest passed.[0m
 
 [33m[tester::#GP4] [0m[94mRunning tests for Stage #GP4 (Navigation - The cd builtin: Home directory)[0m
 [33m[tester::#GP4] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ cd /tmp/pear/pear/banana[0m
+[33m[your-program] [0m[0m$ cd /tmp/raspberry/apple/pineapple[0m
 [33m[your-program] [0m[0m$ pwd[0m
-[33m[your-program] [0m[0m/tmp/pear/pear/banana[0m
+[33m[your-program] [0m[0m/tmp/raspberry/apple/pineapple[0m
 [33m[tester::#GP4] [0m[92mReceived current working directory response[0m
 [33m[your-program] [0m[0m$ cd ~[0m
 [33m[your-program] [0m[0m$ pwd[0m
-[33m[your-program] [0m[0m/tmp/blueberry/raspberry/blueberry[0m
+[33m[your-program] [0m[0m/tmp/pear/grape/pear[0m
 [33m[tester::#GP4] [0m[92mReceived current working directory response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#GP4] [0m[92mTest passed.[0m
 
 [33m[tester::#GQ9] [0m[94mRunning tests for Stage #GQ9 (Navigation - The cd builtin: Relative paths)[0m
 [33m[tester::#GQ9] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ cd /tmp/grape[0m
+[33m[your-program] [0m[0m$ cd /tmp/apple[0m
 [33m[your-program] [0m[0m$ pwd[0m
-[33m[your-program] [0m[0m/tmp/grape[0m
+[33m[your-program] [0m[0m/tmp/apple[0m
 [33m[tester::#GQ9] [0m[92mReceived current working directory response[0m
-[33m[your-program] [0m[0m$ cd ./mango/mango[0m
+[33m[your-program] [0m[0m$ cd ./orange/orange[0m
 [33m[your-program] [0m[0m$ pwd[0m
-[33m[your-program] [0m[0m/tmp/grape/mango/mango[0m
+[33m[your-program] [0m[0m/tmp/apple/orange/orange[0m
 [33m[tester::#GQ9] [0m[92mReceived current working directory response[0m
 [33m[your-program] [0m[0m$ cd ../../../[0m
 [33m[your-program] [0m[0m$ pwd[0m
@@ -513,9 +525,9 @@ Running tests on your code. Logs should appear shortly...
 
 [33m[tester::#RA6] [0m[94mRunning tests for Stage #RA6 (Navigation - The cd builtin: Absolute paths)[0m
 [33m[tester::#RA6] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ cd /tmp/banana/apple/pear[0m
+[33m[your-program] [0m[0m$ cd /tmp/pineapple/strawberry/strawberry[0m
 [33m[your-program] [0m[0m$ pwd[0m
-[33m[your-program] [0m[0m/tmp/banana/apple/pear[0m
+[33m[your-program] [0m[0m/tmp/pineapple/strawberry/strawberry[0m
 [33m[tester::#RA6] [0m[92mReceived current working directory response[0m
 [33m[your-program] [0m[0m$ cd /non-existing-directory[0m
 [33m[your-program] [0m[0mcd: /non-existing-directory: No such file or directory[0m
@@ -535,37 +547,36 @@ Running tests on your code. Logs should appear shortly...
 [33m[tester::#EI0] [0m[92mTest passed.[0m
 
 [33m[tester::#IP1] [0m[94mRunning tests for Stage #IP1 (Run a program)[0m
-[33m[tester::#IP1] [setup] [0m[94mexport PATH=/tmp/cow:$PATH[0m
+[33m[tester::#IP1] [setup] [0m[94mexport PATH=/tmp/rat:$PATH[0m
 [33m[tester::#IP1] [setup] [0m[94mAvailable executables:[0m
-[33m[tester::#IP1] [setup] [0m[94m- custom_exe_4836[0m
-[33m[tester::#IP1] [setup] [0m[94m- custom_exe_4525[0m
+[33m[tester::#IP1] [setup] [0m[94m- custom_exe_4173[0m
+[33m[tester::#IP1] [setup] [0m[94m- custom_exe_7281[0m
 [33m[tester::#IP1] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ custom_exe_4836 James James James[0m
-[33m[your-program] [0m[0mProgram was passed 4 args (including program name).[0m
-[33m[your-program] [0m[0mArg #0 (program name): custom_exe_4836[0m
-[33m[your-program] [0m[0mArg #1: James[0m
-[33m[your-program] [0m[0mArg #2: James[0m
-[33m[your-program] [0m[0mArg #3: James[0m
-[33m[your-program] [0m[0mProgram Signature: 8631184965[0m
+[33m[your-program] [0m[0m$ custom_exe_4173 Alice Alice[0m
+[33m[your-program] [0m[0mProgram was passed 3 args (including program name).[0m
+[33m[your-program] [0m[0mArg #0 (program name): custom_exe_4173[0m
+[33m[your-program] [0m[0mArg #1: Alice[0m
+[33m[your-program] [0m[0mArg #2: Alice[0m
+[33m[your-program] [0m[0mProgram Signature: 5271545444[0m
 [33m[tester::#IP1] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ custom_exe_4525 Emily[0m
+[33m[your-program] [0m[0m$ custom_exe_7281 Maria[0m
 [33m[your-program] [0m[0mProgram was passed 2 args (including program name).[0m
-[33m[your-program] [0m[0mArg #0 (program name): custom_exe_4525[0m
-[33m[your-program] [0m[0mArg #1: Emily[0m
-[33m[your-program] [0m[0mProgram Signature: 6464106520[0m
+[33m[your-program] [0m[0mArg #0 (program name): custom_exe_7281[0m
+[33m[your-program] [0m[0mArg #1: Maria[0m
+[33m[your-program] [0m[0mProgram Signature: 8058623220[0m
 [33m[tester::#IP1] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#IP1] [0m[92mTest passed.[0m
 
 [33m[tester::#MG5] [0m[94mRunning tests for Stage #MG5 (Locate executable files)[0m
-[33m[tester::#MG5] [setup] [0m[94mexport PATH=/tmp/bee:$PATH[0m
 [33m[tester::#MG5] [setup] [0m[94mexport PATH=/tmp/cow:$PATH[0m
-[33m[tester::#MG5] [setup] [0m[94mexport PATH=/tmp/ant:$PATH[0m
-[33m[tester::#MG5] [setup] [0m[94mPATH is now: /tmp/ant:/tmp/cow:/tmp/bee:...[0m
+[33m[tester::#MG5] [setup] [0m[94mexport PATH=/tmp/bee:$PATH[0m
+[33m[tester::#MG5] [setup] [0m[94mexport PATH=/tmp/pig:$PATH[0m
+[33m[tester::#MG5] [setup] [0m[94mPATH is now: /tmp/pig:/tmp/bee:/tmp/cow:...[0m
 [33m[tester::#MG5] [setup] [0m[94mFiles created:[0m
-[33m[tester::#MG5] [setup] [0m[94m- /tmp/bee/my_exe (not executable)[0m
-[33m[tester::#MG5] [setup] [0m[94m- /tmp/ant/my_exe (not executable)[0m
-[33m[tester::#MG5] [setup] [0m[94m- /tmp/cow/my_exe (executable)[0m
+[33m[tester::#MG5] [setup] [0m[94m- /tmp/cow/my_exe (not executable)[0m
+[33m[tester::#MG5] [setup] [0m[94m- /tmp/pig/my_exe (not executable)[0m
+[33m[tester::#MG5] [setup] [0m[94m- /tmp/bee/my_exe (executable)[0m
 [33m[tester::#MG5] [0m[94mRunning ./your_program.sh[0m
 [33m[your-program] [0m[0m$ type cat[0m
 [33m[your-program] [0m[0mcat is /bin/cat[0m
@@ -577,7 +588,7 @@ Running tests on your code. Logs should appear shortly...
 [33m[your-program] [0m[0mmkdir is /bin/mkdir[0m
 [33m[tester::#MG5] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ type my_exe[0m
-[33m[your-program] [0m[0mmy_exe is /tmp/cow/my_exe[0m
+[33m[your-program] [0m[0mmy_exe is /tmp/bee/my_exe[0m
 [33m[tester::#MG5] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ type invalid_orange_command[0m
 [33m[your-program] [0m[0minvalid_orange_command: not found[0m
@@ -599,30 +610,33 @@ Running tests on your code. Logs should appear shortly...
 [33m[your-program] [0m[0m$ type type[0m
 [33m[your-program] [0m[0mtype is a shell builtin[0m
 [33m[tester::#EZ5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ type invalid_orange_command[0m
-[33m[your-program] [0m[0minvalid_orange_command: not found[0m
+[33m[your-program] [0m[0m$ type invalid_blueberry_command[0m
+[33m[your-program] [0m[0minvalid_blueberry_command: not found[0m
 [33m[tester::#EZ5] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ type invalid_pear_command[0m
-[33m[your-program] [0m[0minvalid_pear_command: not found[0m
+[33m[your-program] [0m[0m$ type invalid_raspberry_command[0m
+[33m[your-program] [0m[0minvalid_raspberry_command: not found[0m
 [33m[tester::#EZ5] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#EZ5] [0m[92mTest passed.[0m
 
 [33m[tester::#IZ3] [0m[94mRunning tests for Stage #IZ3 (Implement echo)[0m
 [33m[tester::#IZ3] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ echo orange pineapple[0m
-[33m[your-program] [0m[0morange pineapple[0m
+[33m[your-program] [0m[0m$ echo grape mango pear[0m
+[33m[your-program] [0m[0mgrape mango pear[0m
 [33m[tester::#IZ3] [0m[92m✓ Received expected response[0m
-[33m[your-program] [0m[0m$ echo banana grape strawberry[0m
-[33m[your-program] [0m[0mbanana grape strawberry[0m
+[33m[your-program] [0m[0m$ echo grape orange[0m
+[33m[your-program] [0m[0mgrape orange[0m
+[33m[tester::#IZ3] [0m[92m✓ Received expected response[0m
+[33m[your-program] [0m[0m$ echo grape orange[0m
+[33m[your-program] [0m[0mgrape orange[0m
 [33m[tester::#IZ3] [0m[92m✓ Received expected response[0m
 [33m[your-program] [0m[0m$ [0m
 [33m[tester::#IZ3] [0m[92mTest passed.[0m
 
 [33m[tester::#PN5] [0m[94mRunning tests for Stage #PN5 (Implement exit)[0m
 [33m[tester::#PN5] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ invalid_strawberry_command[0m
-[33m[your-program] [0m[0minvalid_strawberry_command: command not found[0m
+[33m[your-program] [0m[0m$ invalid_pineapple_command[0m
+[33m[your-program] [0m[0minvalid_pineapple_command: command not found[0m
 [33m[tester::#PN5] [0m[92m✓ Received command not found message[0m
 [33m[your-program] [0m[0m$ exit[0m
 [33m[tester::#PN5] [0m[92m✓ Program exited successfully[0m
@@ -651,8 +665,8 @@ Running tests on your code. Logs should appear shortly...
 
 [33m[tester::#CZ2] [0m[94mRunning tests for Stage #CZ2 (Handle invalid commands)[0m
 [33m[tester::#CZ2] [0m[94mRunning ./your_program.sh[0m
-[33m[your-program] [0m[0m$ invalid_orange_command[0m
-[33m[your-program] [0m[0minvalid_orange_command: command not found[0m
+[33m[your-program] [0m[0m$ invalid_blueberry_command[0m
+[33m[your-program] [0m[0minvalid_blueberry_command: command not found[0m
 [33m[tester::#CZ2] [0m[92m✓ Received command not found message[0m
 [33m[tester::#CZ2] [0m[92mTest passed.[0m
 
