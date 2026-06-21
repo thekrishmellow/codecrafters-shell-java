@@ -79,9 +79,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
-        // TODO: Uncomment the code below to pass the first stage
-        // System.out.print("$ ");
-
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -91,62 +88,95 @@ public class Main {
                 break;
             }
             String input = scanner.nextLine();
+            
             // Always check for pipeline first so e.g. "echo x | wc" routes correctly
             List<String> pipeSegments = splitOnPipe(input);
-            if (pipeSegments.size() == 2) {
-                    // Two-command pipeline
-                    List<String> leftParts = parseArguments(pipeSegments.get(0).trim());
-                    List<String> rightParts = parseArguments(pipeSegments.get(1).trim());
-                    if (!leftParts.isEmpty() && !rightParts.isEmpty()) {
-                        boolean leftIsBuiltin = isBuiltin(leftParts.get(0));
-                        boolean rightIsBuiltin = isBuiltin(rightParts.get(0));
-                        try {
-                            if (!leftIsBuiltin && !rightIsBuiltin) {
-                                // Both external — use kernel pipe via startPipeline
-                                ProcessBuilder pbLeft = new ProcessBuilder(leftParts);
-                                pbLeft.directory(new File(System.getProperty("user.dir")));
-                                pbLeft.redirectInput(ProcessBuilder.Redirect.INHERIT);
-                                pbLeft.redirectError(ProcessBuilder.Redirect.INHERIT);
-
-                                ProcessBuilder pbRight = new ProcessBuilder(rightParts);
-                                pbRight.directory(new File(System.getProperty("user.dir")));
-                                pbRight.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                                pbRight.redirectError(ProcessBuilder.Redirect.INHERIT);
-
-                                List<Process> pipeline = ProcessBuilder.startPipeline(List.of(pbLeft, pbRight));
-                                for (Process p : pipeline) {
-                                    p.waitFor();
-                                }
-                            } else if (leftIsBuiltin && !rightIsBuiltin) {
-                                // Left is builtin: write its output into right process's stdin
-                                ProcessBuilder pbRight = new ProcessBuilder(rightParts);
-                                pbRight.directory(new File(System.getProperty("user.dir")));
-                                pbRight.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-                                pbRight.redirectError(ProcessBuilder.Redirect.INHERIT);
-                                Process rightProcess = pbRight.start();
-                                try (java.io.PrintStream ps = new java.io.PrintStream(rightProcess.getOutputStream())) {
-                                    executeBuiltinToStream(leftParts, ps);
-                                }
-                                rightProcess.waitFor();
-                            } else if (!leftIsBuiltin && rightIsBuiltin) {
-                                // Right is builtin: run left with stdout discarded; run right builtin normally
-                                ProcessBuilder pbLeft = new ProcessBuilder(leftParts);
-                                pbLeft.directory(new File(System.getProperty("user.dir")));
-                                pbLeft.redirectInput(ProcessBuilder.Redirect.INHERIT);
-                                pbLeft.redirectOutput(new File("/dev/null"));
-                                pbLeft.redirectError(ProcessBuilder.Redirect.INHERIT);
-                                Process leftProcess = pbLeft.start();
-                                executeBuiltinToStream(rightParts, System.out);
-                                leftProcess.waitFor();
-                            } else {
-                                // Both builtins: discard left output, run right builtin normally
-                                executeBuiltinToStream(rightParts, System.out);
-                            }
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());
+            if (pipeSegments.size() >= 2) {
+                List<List<String>> cmds = new ArrayList<>();
+                for (String seg : pipeSegments) {
+                    List<String> parsed = parseArguments(seg.trim());
+                    if (!parsed.isEmpty()) cmds.add(parsed);
+                }
+                
+                if (cmds.size() >= 2) {
+                    boolean allExternal = true;
+                    boolean firstIsBuiltin = false;
+                    boolean restAreExternal = true;
+                    
+                    if (isBuiltin(cmds.get(0).get(0))) {
+                        firstIsBuiltin = true;
+                        allExternal = false;
+                    }
+                    
+                    for (int i = 1; i < cmds.size(); i++) {
+                        if (isBuiltin(cmds.get(i).get(0))) {
+                            allExternal = false;
+                            restAreExternal = false;
                         }
                     }
-                } else if (input.equals("exit")) {
+
+                    try {
+                        if (allExternal) {
+                            List<ProcessBuilder> builders = new ArrayList<>();
+                            for (int i = 0; i < cmds.size(); i++) {
+                                ProcessBuilder pb = new ProcessBuilder(cmds.get(i));
+                                pb.directory(new File(System.getProperty("user.dir")));
+                                if (i == 0) pb.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                                if (i == cmds.size() - 1) pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                                pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                                builders.add(pb);
+                            }
+                            List<Process> pipeline = ProcessBuilder.startPipeline(builders);
+                            for (Process p : pipeline) {
+                                p.waitFor();
+                            }
+                        } else if (firstIsBuiltin && restAreExternal) {
+                            List<ProcessBuilder> builders = new ArrayList<>();
+                            for (int i = 1; i < cmds.size(); i++) {
+                                ProcessBuilder pb = new ProcessBuilder(cmds.get(i));
+                                pb.directory(new File(System.getProperty("user.dir")));
+                                if (i == cmds.size() - 1) pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                                pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+                                builders.add(pb);
+                            }
+                            
+                            List<Process> pipeline;
+                            if (builders.size() == 1) {
+                                pipeline = List.of(builders.get(0).start());
+                            } else {
+                                pipeline = ProcessBuilder.startPipeline(builders);
+                            }
+                            
+                            try (java.io.PrintStream ps = new java.io.PrintStream(pipeline.get(0).getOutputStream())) {
+                                executeBuiltinToStream(cmds.get(0), ps);
+                            }
+                            for (Process p : pipeline) {
+                                p.waitFor();
+                            }
+                        } else {
+                            // Two-command pipeline fallback for strange combinations
+                            if (cmds.size() == 2) {
+                                boolean leftIsBuiltin = isBuiltin(cmds.get(0).get(0));
+                                boolean rightIsBuiltin = isBuiltin(cmds.get(1).get(0));
+                                if (!leftIsBuiltin && rightIsBuiltin) {
+                                    ProcessBuilder pbLeft = new ProcessBuilder(cmds.get(0));
+                                    pbLeft.directory(new File(System.getProperty("user.dir")));
+                                    pbLeft.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                                    pbLeft.redirectOutput(new File("/dev/null"));
+                                    pbLeft.redirectError(ProcessBuilder.Redirect.INHERIT);
+                                    Process leftProcess = pbLeft.start();
+                                    executeBuiltinToStream(cmds.get(1), System.out);
+                                    leftProcess.waitFor();
+                                } else if (leftIsBuiltin && rightIsBuiltin) {
+                                    executeBuiltinToStream(cmds.get(1), System.out);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                    }
+                }
+            } else if (input.equals("exit")) {
                 break;
             } else if (input.equals("pwd")) {
                 System.out.println(System.getProperty("user.dir"));
