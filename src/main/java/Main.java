@@ -19,9 +19,7 @@ public class Main {
             this.process = process;
         }
     }
-
     private static final List<Job> jobsList = new ArrayList<>();
-
     private static int getNextJobNumber() {
         if (jobsList.isEmpty()) {
             return 1;
@@ -34,7 +32,6 @@ public class Main {
         }
         return maxId + 1;
     }
-
     private static void reapJobs(boolean printAll) {
         if (jobsList.isEmpty()) {
             return;
@@ -54,7 +51,6 @@ public class Main {
         for (Job job : jobsList) {
             boolean alive = job.process.isAlive();
             String status = alive ? "Running" : "Done";
-            
             if (printAll || !alive) {
                 char marker = ' ';
                 if (job.id == currentId) {
@@ -70,17 +66,14 @@ public class Main {
                 }
                 System.out.printf("[%d]%c  %-24s%s\n", job.id, marker, status, displayCommand);
             }
-            
             if (!alive) {
                 toRemove.add(job);
             }
         }
         jobsList.removeAll(toRemove);
     }
-
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
-
         while (true) {
             reapJobs(false);
             System.out.print("$ ");
@@ -88,8 +81,6 @@ public class Main {
                 break;
             }
             String input = scanner.nextLine();
-            
-            // Always check for pipeline first so e.g. "echo x | wc" routes correctly
             List<String> pipeSegments = splitOnPipe(input);
             if (pipeSegments.size() >= 2) {
                 List<List<String>> cmds = new ArrayList<>();
@@ -139,14 +130,12 @@ public class Main {
                                 pb.redirectError(ProcessBuilder.Redirect.INHERIT);
                                 builders.add(pb);
                             }
-                            
                             List<Process> pipeline;
                             if (builders.size() == 1) {
                                 pipeline = List.of(builders.get(0).start());
                             } else {
                                 pipeline = ProcessBuilder.startPipeline(builders);
                             }
-                            
                             try (java.io.PrintStream ps = new java.io.PrintStream(pipeline.get(0).getOutputStream())) {
                                 executeBuiltinToStream(cmds.get(0), ps);
                             }
@@ -154,7 +143,6 @@ public class Main {
                                 p.waitFor();
                             }
                         } else {
-                            // Two-command pipeline fallback for strange combinations
                             if (cmds.size() == 2) {
                                 boolean leftIsBuiltin = isBuiltin(cmds.get(0).get(0));
                                 boolean rightIsBuiltin = isBuiltin(cmds.get(1).get(0));
@@ -268,9 +256,7 @@ public class Main {
                     runInBackground = true;
                     parts.remove(parts.size() - 1);
                 }
-
                 if (parts.isEmpty()) continue;
-
                 String outFile = null;
                 String errFile = null;
                 boolean isAppend = false;
@@ -296,7 +282,6 @@ public class Main {
                         break;
                     }
                 }
-
                 String cmd = parts.get(0);
                 String pathStr = getExecutablePath(cmd);
                 if (pathStr != null) {
@@ -338,8 +323,6 @@ public class Main {
             }
         }
     }
-
-    // Split input on the first unquoted | into exactly 2 segments (or 1 if no pipe)
     private static List<String> splitOnPipe(String input) {
         List<String> segments = new ArrayList<>();
         StringBuilder current = new StringBuilder();
@@ -366,13 +349,10 @@ public class Main {
         segments.add(current.toString());
         return segments;
     }
-
     private static boolean isBuiltin(String cmd) {
         return cmd.equals("echo") || cmd.equals("exit") || cmd.equals("type")
                 || cmd.equals("pwd") || cmd.equals("cd") || cmd.equals("jobs");
     }
-
-    // Run a builtin command writing output to the given stream (for use in pipelines)
     private static void executeBuiltinToStream(List<String> parts, java.io.PrintStream out) {
         String cmd = parts.get(0);
         if (cmd.equals("echo")) {
@@ -405,7 +385,6 @@ public class Main {
             System.setOut(old);
         }
     }
-
     private static String getExecutablePath(String command) {
         String pathEnv = System.getenv("PATH");
         if (pathEnv != null) {
@@ -418,17 +397,14 @@ public class Main {
         }
         return null;
     }
-
     private static List<String> parseArguments(String input) {
         List<String> args = new ArrayList<>();
         StringBuilder currentArg = new StringBuilder();
         boolean inSingleQuotes = false;
         boolean inDoubleQuotes = false;
         boolean inWord = false;
-
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-
             if (c == '\\' && !inSingleQuotes) {
                 if (inDoubleQuotes) {
                     if (i + 1 < input.length()) {
@@ -469,11 +445,9 @@ public class Main {
                 inWord = true;
             }
         }
-
         if (inWord) {
             args.add(currentArg.toString());
         }
-
         return args;
     }
 }
